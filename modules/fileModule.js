@@ -4,7 +4,7 @@ const shell = require('shelljs');
 const _ = require('lodash');
 const defaultPath = path.join(__dirname, '../image/')
 
-const FileService = (function () {
+const FileModule = (function () {
 	const saveDir = `${defaultPath}${moment().tz('Asia/Seoul').format('YYYYMMDD')}/`;
 	const rollback = async function (files) {
 		return await go(files,
@@ -32,4 +32,4 @@ const FileService = (function () {
 	}
 })();
 
-module.exports = FileService;
+module.exports = FileModule;

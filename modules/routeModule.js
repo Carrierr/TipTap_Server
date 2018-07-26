@@ -5,7 +5,7 @@ const csrfProtection = new csurf({ cookie: true });
 const config = require('../config');
 const { authCtrl, fileCtrl } = require('../controller');
 
-const RoutesService = (function (){
+const RoutesModule = (function (){
   return {
     Init: function () {
       if (app.get('env') === 'production') {
@@ -35,4 +35,4 @@ const RoutesService = (function (){
   }
 })();
 
-module.exports = RoutesService;
+module.exports = RoutesModule;

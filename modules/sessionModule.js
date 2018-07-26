@@ -4,7 +4,7 @@ const moment = require('moment');
 const config = require('../config');
 const util = require('util');
 
-const SessionService = (function () {
+const SessionModule = (function () {
   const setting = {
     store: new redisStore({
       port: config.redis.redisPort,
@@ -25,4 +25,4 @@ const SessionService = (function () {
   }
 })();
 
-module.exports = SessionService;
+module.exports = SessionModule;

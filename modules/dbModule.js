@@ -2,7 +2,7 @@ const mysql = require('mysql');
 const config = require('../config');
 const util = require('util');
 
-const DBService = (function(){
+const DBModule = (function(){
   return {
     Init: function () {
         this._pool = mysql.createPool({
@@ -30,4 +30,4 @@ const DBService = (function(){
     }
 })();
 
-module.exports = DBService;
+module.exports = DBModule;

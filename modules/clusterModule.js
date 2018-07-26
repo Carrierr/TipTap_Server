@@ -1,7 +1,7 @@
 const moment = require('moment');
 const cluster = require('cluster');
 
-const ClusterService = (function () {
+const ClusterModule = (function () {
   const localCpus = require('os').cpus().length;
   return {
     run: function(processRun, forkCount) {
@@ -21,4 +21,4 @@ const ClusterService = (function () {
   }
 })();
 
-module.exports = ClusterService;
+module.exports = ClusterModule;

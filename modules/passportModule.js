@@ -3,7 +3,7 @@ const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 const config = require('../config');
 
-const PassportService = (function () {
+const PassportModule = (function () {
   return {
     Init: function () {
       passport.use(new GoogleStrategy({
@@ -34,4 +34,4 @@ passport.deserializeUser(function(user, done) {
     done(null, user);
 });
 
-module.exports = PassportService;
+module.exports = PassportModule;
