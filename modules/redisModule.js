@@ -6,7 +6,7 @@ const moment = require('moment-timezone');
 const config = require('../config');
 const common = require('../utils/common');
 
-const RedisService = (function () {
+const RedisModule = (function () {
   const redis = new ioRedis(
   {
       port: config.redis.redisPort,
@@ -30,7 +30,7 @@ const RedisService = (function () {
                   aud : key + 'normal',
                   exp : expire
                 }, config.server.auth_key, 'HS512')
-                return RedisService.setKey(key, token)
+                return RedisModule.setKey(key, token)
             }
             return 'ALREADY'
         }).catch(error => {
@@ -48,4 +48,4 @@ const RedisService = (function () {
   }
 })();
 
-module.exports = RedisService;
+module.exports = RedisModule;

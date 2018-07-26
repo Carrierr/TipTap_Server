@@ -2,7 +2,7 @@ const util = require('util');
 const moment = require('moment');
 const { user, auth, notification, blame, version } = require('../entity');
 
-const EntityService = (function (){
+const EntityModule = (function (){
   return {
     Init: function () {
         auth.belongsTo(user, { foreignKey : 'user_id', onUpdate : 'CASCADE', onDelete: 'CASCADE' });
@@ -27,4 +27,4 @@ const EntityService = (function (){
   }
 })();
 
-module.exports = EntityService;
+module.exports = EntityModule;
