@@ -3,7 +3,7 @@ const util = require('util');
 const moment = require('moment');
 const csrfProtection = new csurf({ cookie: true });
 const config = require('../config');
-const { authCtrl, fileCtrl } = require('../controller');
+const { authCtrl, fileCtrl, diaryCtrl, accountCtrl } = require('../controller');
 
 const RoutesModule = (function (){
   return {
@@ -15,7 +15,7 @@ const RoutesModule = (function (){
                                   ));
       }
 
-      app.use(function log(req, res, next) {
+      app.use((req, res, next) => {
 
           res.header('Access-Control-Allow-Origin', config.server.accept_domain);
           res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -28,6 +28,8 @@ const RoutesModule = (function (){
       });
 
       app.use('/auth', authCtrl);
+      app.use('/diary', diaryCtrl);
+      app.use('/account', accountCtrl);
       app.use('/file', fileCtrl);
       console.log(util.format('[Logger]::[Route]::[Service]::[%s]::[Started]',
                                 moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')));

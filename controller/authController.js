@@ -58,39 +58,40 @@ router.post('/check', (req, res) => {
   .catch(e => respondOnError(res, resultCode.error, e.message));
 });
 
-router.post('/signup', (req, res) => {
-
-  const { name, phone, mail, type } = req.body;
-  const auth = req.headers['travel-auth'];
-  const data = {
-    name: name,
-    phone: phone,
-    mail: mail,
-    type: type,
-    loginedAt: moment().tz('Asia/Seoul').format('YYYY-MM-DD hh:mm:ss')
-  };
-
-  go(null,
-    _ => userModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
-    rdbR => setValue(auth, JSON.stringify({auth: true, userId: rdbR.id})),
-    redisR => redisR == 'OK' ? respondJson(res, resultCode.success, redisR)
-                              : respondOnError(res, resultCode.error, redisR)
-  );
-});
-
 router.post('/token/create', (req, res) => {
-  const { type, account , name } = req.body;
+  const { type, account, name } = req.body;
   const data = {
     name: name,
-    type: type,
-    thirdPartyAccount: account
+    authType: type,
+    thirdPartyAccount: account,
+    token: uuidv4()
   };
 
   go(
     data,
     v => userModel.create(v).catch(e => respondOnError(res, resultCode.error, e.message)),
-    insertResult => setFirstAuth(uuidv4(), insertResult.id),
+    insertResult => setFirstAuth(insertResult.token, insertResult.id),
     setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
+  );
+});
+
+router.post('/sign/in', (req, res) => {
+  const { type, account, name } = req.body;
+  const options = {
+    where: {
+      authType: type,
+      thirdPartyAccount: account,
+      name: name
+    },
+    attributes: ['token']
+  };
+
+  go(
+      options,
+      v => userModel.findOne(v).catch(e => respondOnError(res, resultCode.error, e.message)),
+      result => result
+      ? respondJson(res, resultCode.success, { token: result.token })
+      : respondOnError(res, resultCode.error, { desc: 'not found user' })
   );
 });
 

@@ -1,6 +1,6 @@
 const util = require('util');
 const moment = require('moment');
-const { user, diary, notification, blame, version } = require('../entity');
+const { user, diary, notification, blame, version, push } = require('../entity');
 
 const EntityModule = (function (){
   return {
@@ -17,6 +17,7 @@ const EntityModule = (function (){
           diary.sync();
           notification.sync();
           blame.sync();
+          push.sync();
           console.log(util.format('[Logger]::[Entity]::[Service]::[%s]::[Initialized]',
                                     moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')));
         })
