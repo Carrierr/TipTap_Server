@@ -1,11 +1,11 @@
 const util = require('util');
 const moment = require('moment');
-const { user, auth, notification, blame, version } = require('../entity');
+const { user, diary, notification, blame, version } = require('../entity');
 
 const EntityModule = (function (){
   return {
     Init: function () {
-        auth.belongsTo(user, { foreignKey : 'user_id', onUpdate : 'CASCADE', onDelete: 'CASCADE' });
+        diary.belongsTo(user, { foreignKey : 'user_id', onUpdate : 'CASCADE', onDelete: 'CASCADE' });
         user.hasMany(notification, { foreignKey : 'user_id', onUpdate : 'CASCADE' });
         user.hasMany(notification, { foreignKey : 'send_user_id', onUpdate : 'CASCADE' });
         user.hasMany(blame, { foreignKey : 'user_id', onUpdate : 'CASCADE' });
@@ -14,7 +14,7 @@ const EntityModule = (function (){
         version.sync();
         user.sync()
         .then(() => {
-          auth.sync();
+          diary.sync();
           notification.sync();
           blame.sync();
           console.log(util.format('[Logger]::[Entity]::[Service]::[%s]::[Initialized]',

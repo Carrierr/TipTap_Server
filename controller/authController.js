@@ -5,8 +5,8 @@ const moment = require('moment');
 const _ = require('lodash');
 const router = express.Router();
 
-const { respondJson, respondOnError, respondHtml } = require('../utils/respond');
-const { getValue, setValue, setDefaultKey } = require('../modules/redisModule');
+const { respondJson, respondOnError } = require('../utils/respond');
+const { getValue, setValue, setDefaultKey, setFirstAuth } = require('../modules/redisModule');
 const { authModel, userModel } = require('../model');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl } = require('../utils/common');
@@ -78,8 +78,20 @@ router.post('/signup', (req, res) => {
   );
 });
 
-router.post('/signin', (req, res) => {
-  console.log(req)
+router.post('/token/create', (req, res) => {
+  const { type, account , name } = req.body;
+  const data = {
+    name: name,
+    type: type,
+    thirdPartyAccount: account
+  };
+
+  go(
+    data,
+    v => userModel.create(v).catch(e => respondOnError(res, resultCode.error, e.message)),
+    insertResult => setFirstAuth(uuidv4(), insertResult.id),
+    setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
+  );
 });
 
 module.exports = router;

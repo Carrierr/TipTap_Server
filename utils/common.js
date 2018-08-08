@@ -38,7 +38,9 @@ const Common = {
       _ => _
     )
   },
-  parameterFormCheck: (param, form) => isMatch(Object.keys(param), Object.keys(form)),
+  parameterFormCheck: (param, form) => Object.keys(form).length === 0 
+    ? true
+    : isMatch(Object.keys(param), Object.keys(form)),
   getUrl: (originalUrl) => originalUrl.split('?')[0]
 };
 
