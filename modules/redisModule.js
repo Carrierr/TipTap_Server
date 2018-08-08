@@ -37,8 +37,15 @@ const RedisModule = (function () {
           throw error
         })
     },
-    getValue: async (key) => await redis.get(key).catch(e => e.message),
-    setValue: async (key, value) => await redis.set(key, value).catch(e => e.message),
+    getValue: async (key) => await redis.get(key).then(v => JSON.parse(v)).catch(e => e.message),
+    setValue: async (key, value) => await redis.set(key, JSON.stringify(value)).catch(e => e.message),
+    setFirstAuth: async (key, value) => {
+      const auth = {
+        auth: true,
+        key: value
+      }
+      return await redis.set(key, JSON.stringify(auth)).then(_ => key).catch(e => e.message);
+    },
     setDefaultKey: async function (key) {
       const value = {
         auth: false

@@ -5,8 +5,8 @@ const moment = require('moment');
 const _ = require('lodash');
 const router = express.Router();
 
-const { respondJson, respondOnError, respondHtml } = require('../utils/respond');
-const { getValue, setValue, setDefaultKey } = require('../modules/redisModule');
+const { respondJson, respondOnError } = require('../utils/respond');
+const { getValue, setValue, setDefaultKey, setFirstAuth } = require('../modules/redisModule');
 const { authModel, userModel } = require('../model');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl } = require('../utils/common');
@@ -58,28 +58,41 @@ router.post('/check', (req, res) => {
   .catch(e => respondOnError(res, resultCode.error, e.message));
 });
 
-router.post('/signup', (req, res) => {
-
-  const { name, phone, mail, type } = req.body;
-  const auth = req.headers['travel-auth'];
+router.post('/token/create', (req, res) => {
+  const { type, account, name } = req.body;
   const data = {
     name: name,
-    phone: phone,
-    mail: mail,
-    type: type,
-    loginedAt: moment().tz('Asia/Seoul').format('YYYY-MM-DD hh:mm:ss')
+    authType: type,
+    thirdPartyAccount: account,
+    token: uuidv4()
   };
 
-  go(null,
-    _ => userModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
-    rdbR => setValue(auth, JSON.stringify({auth: true, userId: rdbR.id})),
-    redisR => redisR == 'OK' ? respondJson(res, resultCode.success, redisR)
-                              : respondOnError(res, resultCode.error, redisR)
+  go(
+    data,
+    v => userModel.create(v).catch(e => respondOnError(res, resultCode.error, e.message)),
+    insertResult => setFirstAuth(insertResult.token, insertResult.id),
+    setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
   );
 });
 
-router.post('/signin', (req, res) => {
-  console.log(req)
+router.post('/sign/in', (req, res) => {
+  const { type, account, name } = req.body;
+  const options = {
+    where: {
+      authType: type,
+      thirdPartyAccount: account,
+      name: name
+    },
+    attributes: ['token']
+  };
+
+  go(
+      options,
+      v => userModel.findOne(v).catch(e => respondOnError(res, resultCode.error, e.message)),
+      result => result
+      ? respondJson(res, resultCode.success, { token: result.token })
+      : respondOnError(res, resultCode.error, { desc: 'not found user' })
+  );
 });
 
 module.exports = router;

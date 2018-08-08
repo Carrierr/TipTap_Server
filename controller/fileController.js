@@ -31,11 +31,11 @@ router.post('/write', (req, res) => {
       write
     )
   })
-  .then(result => {
-    result ?
-      respondJson(res, resultCode.success, {'desc' : 'file write success'})
-        : respondJson(res, resultCode.error, {'desc' : 'file write fail'})
-  })
+  .then(result =>
+    result
+    ? respondJson(res, resultCode.success, {'desc' : 'file write success'})
+    : respondJson(res, resultCode.error, {'desc' : 'file write fail'})
+  )
   .catch(e => respondOnError(res, resultCode.error, e.message))
 });
 
