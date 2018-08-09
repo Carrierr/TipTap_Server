@@ -28,11 +28,13 @@ global.app = new express();
 function processRun() {
   (async () => {
     app.set('port', process.env.PORT || config.server.port);
-    app.use(fileUpload());
+    app.use(fileUpload({
+      limits: { fileSize: 15 * 1024 * 1024 },
+    }));
     app.use(compression());
     app.use(methodOverride());
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json({limit: '15mb'}));
+    app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }));
     app.set('trust proxy', config.server.trust_proxy_host);
     app.use(express.static(path.join(__dirname, 'image')));
 
