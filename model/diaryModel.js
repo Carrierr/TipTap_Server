@@ -14,8 +14,16 @@ const diaryModel = (function () {
     findOne: async function(options) {
         return await diary.findOne(options);
     },
+    findDeleteTarget: async function(options) {
+        options.attributes = ['imagePath'];
+        return await diary.findOne(options);
+    },
     findAll: async function(options) {
         return await diary.findAll(options);
+    },
+    delete: async function(options) {
+        log(options)
+        return await diary.destroy(options);
     }
   }
 })();

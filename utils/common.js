@@ -33,11 +33,6 @@ const Common = {
       )
     ) ? images : false
   },
-  unknownTypeCheck: function (value) {
-    return go(value,
-      _ => _
-    )
-  },
   parameterFormCheck: (param, form) => Object.keys(form).length === 0 
     ? true
     : isMatch(Object.keys(param), Object.keys(form)),

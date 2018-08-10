@@ -8,7 +8,7 @@ const router = express.Router();
 
 const resultCode = require('../utils/resultCode');
 const { respondJson, respondOnError, respondHtml } = require('../utils/respond');
-const { write, read, createDir } = require('../modules/fileModule');
+const { write, createDir } = require('../modules/fileModule');
 const { imagesTypeCheck } = require('../utils/common');
 
 const controllerName = 'File';
@@ -24,6 +24,7 @@ router.use((req, res, next) => {
 });
 
 router.post('/write', (req, res) => {
+  log(req.files)
   createDir()
   .then(async () => {
     return await go(req.files,

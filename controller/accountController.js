@@ -45,7 +45,7 @@ router.post('/update', (req, res) => {
     };
 
     go(
-        req.headers['wellfit-token'],
+        req.headers['tiptap-token'],
         getValue,
         result => result
         ? ((key) => {
