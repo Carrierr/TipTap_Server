@@ -24,6 +24,7 @@ const forkCount = parseInt(process.env.FORK_CNT) || undefined;
 const clusterOn = process.env.CLUSTER_ON || false;
 
 global.app = new express();
+global.baseUrl = process.env.NODE_ENV === 'development' ? `http://localhost:${config.server.port}` : `http://ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:${config.server.port}`;
 
 function processRun() {
   (async () => {

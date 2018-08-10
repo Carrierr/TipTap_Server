@@ -7,8 +7,9 @@ const router = express.Router();
 const { respondJson, respondOnError } = require('../utils/respond');
 const { diaryModel } = require('../model');
 const { getValue } = require('../modules/redisModule');
+const { writeFile, deleteFile, createDir, createSaveFileData } = require('../modules/fileModule');
 const resultCode = require('../utils/resultCode');
-const { parameterFormCheck, getUrl } = require('../utils/common');
+const { parameterFormCheck, getUrl, imagesTypeCheck } = require('../utils/common');
 const { diaryRq } = require('../utils/requestForm');
 
 const controllerName = 'Diary';
@@ -21,67 +22,139 @@ router.use((req, res, next) => {
                                 moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                             ));
 
-    next();
-    // parameterFormCheck(
-    //     req.body || req.params || req.query,
-    //     diaryRq[getUrl(req.originalUrl)])
-    //     ? next()
-    //     : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"});
+    parameterFormCheck(
+        req.body || req.params || req.query,
+        diaryRq[getUrl(req.originalUrl)])
+        ? next()
+        : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"});
 });
 
 router.post('/write', (req, res) => {
+    const fileName = req.files ? req.files.diaryFile.name : false;
     const { content, location, latitude, longitude } = req.body;
-    log(content);
-    log(location);
-    log(latitude);
-    log(longitude);
-    const options = {
-        content: content
+    const data = {
+        content: content,
+        location: location,
+        latitude: latitude,
+        longitude: longitude
     };
 
-    go(
-      null,
-      _ => respondJson(res, resultCode.success, { desc: 'completed update' })
+    fileName
+    ? go(
+        null,
+        createDir,
+        dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
+        result => {
+            data.imagePath = result.path;
+            data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
+            req.files.diaryFile.name = result.name;
+            return req.files;
+        },
+        imagesTypeCheck,
+        writeFile,
+        fileWriteResult => fileWriteResult 
+        ? true
+        : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
+        _ => getValue(req.headers['tiptap-token']),
+        session => {
+            data.user_id = session.key;
+            return data;
+        },
+        insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
+    )
+    : go(
+        req.headers['tiptap-token'],
+        getValue,
+        session => {
+            data.user_id = session.key;
+            return data;
+        },
+        insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     );
 });
 
-router.post('/file/write', (req, res) => {
-  createDir()
-  .then(async () => {
-    return await go(req.files,
-      imagesTypeCheck,
-      write
-    )
-  })
-  .then(result =>
-    result
-    ? respondJson(res, resultCode.success, {'desc' : 'file write success'})
-    : respondJson(res, resultCode.error, {'desc' : 'file write fail'})
-  )
-  .catch(e => respondOnError(res, resultCode.error, e.message))
+router.get('/list', (req, res) => {
+    const options = {};
+
+    go(
+        req.headers['tiptap-token'],
+        getValue,
+        result => result
+            ? ((key) => { options.where = { user_id: key }; return options; })(result.key) 
+            : respondOnError(res, resultCode.error, { desc: 'unknown token' }),
+        options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        result => respondJson(res, resultCode.success, { list: result })
+    );
 });
 
 router.post('/update', (req, res) => {
-    const { data } = req.body;
+    const fileName = req.files ? req.files.diaryFile.name : false;
+    const { content, location, latitude, longitude, id } = req.body;
     const options = {
-        data: data
+        data: {
+            content: content,
+            location: location,
+            latitude: latitude,
+            longitude: longitude
+        },
+        where: {
+            id: id
+        }
     };
 
-    go(
-      null,
-      respondJson(res, resultCode.success, { desc: 'completed update' })
+    fileName
+    ? go(
+        id,
+        target => diaryModel.findDeleteTarget({ where: { id: target } }).catch(e => respondOnError(res, resultCode.error, e.message)),
+        deleteTarget => deleteFile(deleteTarget.imagePath),
+        log,
+        createDir,
+        dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
+        result => {
+            options.data.imagePath = result.path;
+            options.data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
+            req.files.diaryFile.name = result.name;
+            return req.files;
+        },
+        imagesTypeCheck,
+        writeFile,
+        fileWriteResult => fileWriteResult 
+        ? true
+        : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
+        _ => getValue(req.headers['tiptap-token']),
+        session => {
+            options.where.user_id = session.key;
+            return options;
+        },
+        updateData => diaryModel.update(updateData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
+    )
+    : go(
+        req.headers['tiptap-token'],
+        getValue,
+        session => {
+            options.where.user_id = session.key;
+            return options;
+        },
+        updateData => diaryModel.update(updateData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
     );
 });
 
 router.post('/delete', (req, res) => {
-    const { data } = req.body;
+    const { id } = req.body;
     const options = {
-        data: data
+        where: {
+            id: id
+        }
     };
 
     go(
-      null,
-      respondJson(res, resultCode.success, { desc: 'completed update' })
+        null,
+        _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
     );
 });
 

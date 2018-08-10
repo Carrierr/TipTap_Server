@@ -41,7 +41,8 @@ const diary = sequelizeInstance.define('diary', {
     user_id: { type : sequelize.INTEGER(11), allowNull : false }, // 작성자
     content: { type: sequelize.STRING(1500), allowNull: true }, // 일기 내용
     location: { type: sequelize.STRING(255), allowNull: false }, // 일기 작성 주소
-    image: { type: sequelize.STRING(300), allowNull: true }, // 이메일
+    imagePath: { type: sequelize.STRING(300), allowNull: true }, // 이미지 저장 경로
+    imageUrl: { type: sequelize.STRING(200), allowNull: true }, // 이미지 Url
     latitude: { type : sequelize.STRING(30), allowNull : false }, // 경도
     longitude: { type : sequelize.STRING(30), allowNull : false }, // 위도
     star: { type: sequelize.SMALLINT.UNSIGNED, allowNull: true, defaultValue : 0 },
