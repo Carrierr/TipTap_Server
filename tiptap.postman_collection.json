@@ -1,0 +1,211 @@
+{
+	"variables": [],
+	"info": {
+		"name": "tiptap",
+		"_postman_id": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+		"description": "tiptap api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "0. create token",
+			"request": {
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/token/create",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"gs@naver.com\",\n  \"name\": \"giseoplee\"\n}"
+				},
+				"description": "첫 로그인 후 토큰 발급"
+			},
+			"response": []
+		},
+		{
+			"name": "1. sign in",
+			"request": {
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/sign/in",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"wonbbang@kakaocorp.com\",\n  \"name\": \"wonBang\"\n}"
+				},
+				"description": "기존 회원 서드파티 로그인"
+			},
+			"response": []
+		},
+		{
+			"name": "2. write diary",
+			"request": {
+				"url": "127.0.0.1:8081/diary/write",
+				"method": "POST",
+				"header": [
+					{
+						"key": "tiptap-token",
+						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "일기입니다 팁탭 일기에요",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "서울시 금천구 가산동 533-22",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "36.806702",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "126.979874",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "diaryFile",
+							"description": "",
+							"type": "file",
+							"src": "new_image.jpeg"
+						}
+					]
+				},
+				"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)"
+			},
+			"response": []
+		},
+		{
+			"name": "3. get diaries",
+			"request": {
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
+				"method": "GET",
+				"header": [
+					{
+						"key": "tiptap-token",
+						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "",
+							"value": "",
+							"description": "",
+							"type": "file"
+						}
+					]
+				},
+				"description": "일기 데이터 조회"
+			},
+			"response": []
+		},
+		{
+			"name": "4. delete diary",
+			"request": {
+				"url": "127.0.0.1:8081/diary/delete",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "tiptap-token",
+						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"id\": 2\n}"
+				},
+				"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값"
+			},
+			"response": []
+		},
+		{
+			"name": "5. update diary",
+			"request": {
+				"url": "127.0.0.1:8081/diary/update",
+				"method": "POST",
+				"header": [
+					{
+						"key": "tiptap-token",
+						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "content",
+							"value": "update 로직 테스트",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "location",
+							"value": "경기도 고양시 덕양구 화정동 533-33",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "latitude",
+							"value": "44.806702",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "longitude",
+							"value": "444.4422122",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "6",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "diaryFile",
+							"description": "",
+							"type": "file",
+							"src": "Blackfish720x630.jpg"
+						}
+					]
+				},
+				"description": "일기 수정\nid : diary/list 에서 반환되는 id\n나머지 파라메터는 write와 동일"
+			},
+			"response": []
+		}
+	]
+}
