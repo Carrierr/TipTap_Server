@@ -6,7 +6,9 @@
     "dev:linux": "export NODE_ENV=development&& nodemon main.js",
     "start:window": "set NODE_ENV=development&& node main.js",
     "start:linux": "export NODE_ENV=production&& node main.js",
-    "cluster": "set CLUSTER_ON=1&& node main.js"
+    "cluster": "set CLUSTER_ON=1&& node main.js",
+    "start": "export NODE_ENV=ec2&& node main.js",
+    "start_w": "set NODE_ENV=ec2&& node main.js"
   },
   "dependencies": {
     "async": "^2.4.1",

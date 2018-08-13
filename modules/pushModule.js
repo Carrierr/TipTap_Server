@@ -22,4 +22,4 @@ const PushModule = (function () {
   }
 })();
 
-module.exports = RedisService;
+module.exports = PushModule;

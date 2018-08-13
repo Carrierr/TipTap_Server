@@ -4,9 +4,6 @@ require('./utils/functional');
 
 const express = require('express');
 const path = require('path');
-const favicon = require('serve-favicon');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
 const util = require('util');
@@ -24,7 +21,8 @@ const forkCount = parseInt(process.env.FORK_CNT) || undefined;
 const clusterOn = process.env.CLUSTER_ON || false;
 
 global.app = new express();
-global.baseUrl = process.env.NODE_ENV === 'development' ? `http://localhost:${config.server.port}` : `http://ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:${config.server.port}`;
+global.baseUrl = process.env.NODE_ENV === 'ec2' ? `http://ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:${config.server.port}` 
+: `http://localhost:${config.server.port}`;
 
 function processRun() {
   (async () => {
