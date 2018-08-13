@@ -26,7 +26,7 @@ const Common = {
   },
   imagesTypeCheck: function (images) {
     return go(images,
-      every(v => ['jpg', 'jpeg', 'png']
+      every(v => ['JPG', 'JPEG', 'PNG', 'jpg', 'jpeg', 'png']
         .includes(
           last(v.name.split('.'))
         )
