@@ -3,28 +3,28 @@ const moment = require('moment');
 const shell = require('shelljs');
 const _ = require('lodash');
 const defaultPath = path.join(__dirname, '../image/');
-const saveDir = `${defaultPath}${moment().tz('Asia/Seoul').format('YYYYMMDD')}/`;
+const saveDir = () => `${defaultPath}${moment().tz('Asia/Seoul').format('YYYYMMDD')}/`;
 
 const FileModule = (function () {
 	const rollback = async function (files) {
 		return await go(files,
-			map(file => `${saveDir}${file}`),
+			map(file => `${saveDir()}${file}`),
 			arr => shell.rm(arr)
 		)
 	};
 	return {
 		createDir: async function () {
-			return await shell.cat(saveDir).stdout.length > 0 ? saveDir
+			return await shell.cat(saveDir()).stdout.length > 0 ? saveDir()
 					: (dir => {
 							shell.mkdir('-p', dir);
 							return dir;
-						})(saveDir);
+						})(saveDir());
 		},
 		writeFile: async function (files) {
 			const fileNames = _.map(files, v => v.name);
 			return await go(
 				files,
-				each(f => f.mv(`${saveDir}${f.name}`,
+				each(f => f.mv(`${saveDir()}${f.name}`,
 						err => !!err ? rollback(fileNames) : false)
 				),
 				_ => (_ === files && !!files) ? true : false

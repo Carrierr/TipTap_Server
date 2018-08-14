@@ -109,7 +109,6 @@ router.post('/update', (req, res) => {
         id,
         target => diaryModel.findDeleteTarget({ where: { id: target } }).catch(e => respondOnError(res, resultCode.error, e.message)),
         deleteTarget => deleteFile(deleteTarget.imagePath),
-        log,
         createDir,
         dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
         result => {
