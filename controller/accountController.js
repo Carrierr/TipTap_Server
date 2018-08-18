@@ -20,11 +20,14 @@ router.use((req, res, next) => {
                                 req.ip,
                                 moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                             ));
-    parameterFormCheck(
-        req.body || req.params || req.query,
-        accountRq[getUrl(req.originalUrl)])
-        ? next()
-        : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"});
+    go(
+      req.body || req.params || req.query,
+      parameterFormCheck,
+      f => f(accountRq[getUrl(req.originalUrl)]),
+      result => result
+      ? next()
+      : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"})
+    );
 });
 
 router.post('/update', (req, res) => {

@@ -6,10 +6,10 @@ const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
 const { diaryModel } = require('../model');
-const { getValue } = require('../modules/redisModule');
+const { getValue, setStampPosition, getStampPosition } = require('../modules/redisModule');
 const { writeFile, deleteFile, createDir, createSaveFileData } = require('../modules/fileModule');
 const resultCode = require('../utils/resultCode');
-const { parameterFormCheck, getUrl, imagesTypeCheck } = require('../utils/common');
+const { parameterFormCheck, getUrl, imagesTypeCheck, getRemainStamp, getRandomStamp } = require('../utils/common');
 const { diaryRq } = require('../utils/requestForm');
 
 const controllerName = 'Diary';
@@ -22,11 +22,14 @@ router.use((req, res, next) => {
                                 moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                             ));
 
-    parameterFormCheck(
-        req.body || req.params || req.query,
-        diaryRq[getUrl(req.originalUrl)])
-        ? next()
-        : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"});
+    go(
+      req.body || req.params || req.query,
+      parameterFormCheck,
+      f => f(diaryRq[getUrl(req.originalUrl)]),
+      result => result
+      ? next()
+      : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"})
+    );
 });
 
 router.post('/write', (req, res) => {
@@ -52,7 +55,7 @@ router.post('/write', (req, res) => {
         },
         imagesTypeCheck,
         writeFile,
-        fileWriteResult => fileWriteResult 
+        fileWriteResult => fileWriteResult
         ? true
         : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
         _ => getValue(req.headers['tiptap-token']),
@@ -61,6 +64,11 @@ router.post('/write', (req, res) => {
             return data;
         },
         insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => req.headers['tiptap-token'],
+        getStampPosition,
+        arr => getRemainStamp(arr || []),
+        getRandomStamp,
+        stamp => setStampPosition(req.headers['tiptap-token'], stamp),
         _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     )
     : go(
@@ -71,6 +79,11 @@ router.post('/write', (req, res) => {
             return data;
         },
         insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => req.headers['tiptap-token'],
+        getStampPosition,
+        arr => getRemainStamp(arr || []),
+        getRandomStamp,
+        stamp => setStampPosition(req.headers['tiptap-token'], stamp),
         _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     );
 });
@@ -82,10 +95,25 @@ router.get('/list', (req, res) => {
         req.headers['tiptap-token'],
         getValue,
         result => result
-            ? ((key) => { options.where = { user_id: key }; return options; })(result.key) 
+            ? ((key) => { options.where = { user_id: key }; return options; })(result.key)
             : respondOnError(res, resultCode.error, { desc: 'unknown token' }),
         options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
         result => respondJson(res, resultCode.success, { list: result })
+    );
+});
+
+router.get('/today', (req, res) => {
+    const options = {};
+    let respondStamp = [];
+
+    go(
+        req.headers['tiptap-token'],
+        getValue,
+        result => result
+            ? ((obj) => { respondStamp = obj.stamp; options.where = { user_id: obj.key }; return options; })(result)
+            : respondOnError(res, resultCode.error, { desc: 'unknown token' }),
+        options => diaryModel.findToday(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        result => respondJson(res, resultCode.success, { list: result, stamp: respondStamp })
     );
 });
 
@@ -119,7 +147,7 @@ router.post('/update', (req, res) => {
         },
         imagesTypeCheck,
         writeFile,
-        fileWriteResult => fileWriteResult 
+        fileWriteResult => fileWriteResult
         ? true
         : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
         _ => getValue(req.headers['tiptap-token']),

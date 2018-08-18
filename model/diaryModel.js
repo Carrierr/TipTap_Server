@@ -1,4 +1,5 @@
 const { diary } = require('../entity');
+const moment = require('moment');
 
 const diaryModel = (function () {
   return {
@@ -19,6 +20,12 @@ const diaryModel = (function () {
         return await diary.findOne(options);
     },
     findAll: async function(options) {
+        return await diary.findAll(options);
+    },
+    findToday: async function(options) {
+        options.where.createdAt = {
+          $gte: `${moment().tz('Asia/Seoul').format('YYYY-MM-DD')} 00:00:00`
+        }
         return await diary.findAll(options);
     },
     delete: async function(options) {
