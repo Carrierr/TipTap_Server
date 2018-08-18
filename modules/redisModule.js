@@ -21,22 +21,6 @@ const RedisModule = (function () {
       }
   });
   return {
-    findAndCreate: async function (key) {
-      return await redis.get(key)
-        .then(result => {
-            if(_.eq(result, null)) {
-                const expire = moment().add('minutes', 720).valueOf();
-                const token = jwt.encode({
-                  aud : key + 'normal',
-                  exp : expire
-                }, config.server.auth_key, 'HS512')
-                return RedisModule.setKey(key, token)
-            }
-            return 'ALREADY'
-        }).catch(error => {
-          throw error
-        })
-    },
     getValue: async (key) => await redis.get(key).then(v => JSON.parse(v)).catch(e => e.message),
     setValue: async (key, value) => await redis.set(key, JSON.stringify(value)).catch(e => e.message),
     setFirstAuth: async (key, value) => {
@@ -51,7 +35,31 @@ const RedisModule = (function () {
         auth: false
       };
       return await redis.set(key, JSON.stringify(value)).then(_ => key);
-    }
+    },
+    getStampPosition: function (key) {
+      return go(
+        key,
+        key => RedisModule.getValue(key),
+        result => result.stamp
+      );
+    },
+    setStampPosition: curry(function (key, stamp) {
+      return go(
+          key,
+          key => RedisModule.getValue(key),
+          result => {
+            result.stamp
+            ? result.stamp.push(stamp)
+            : (() => {
+              result.stamp = [];
+              result.stamp.push(stamp);
+            })();
+            return result;
+          },
+          obj => RedisModule.setValue(key, obj)
+        );
+      }
+    )
   }
 })();
 

@@ -22,6 +22,7 @@ module.exports = {
     },
     diaryRq: {
       '/diary/list': {},
+      '/diary/today': {},
       '/diary/write': {
         	content: "tiptap diary content",
         	location: "서울시 금천구 가산동 533-22",
@@ -37,6 +38,9 @@ module.exports = {
       },
       '/diary/delete': {
         id: '1'
-      },
+      }
+    },
+    fileRq: {
+      '/file/write': {}
     }
 }

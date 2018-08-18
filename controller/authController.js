@@ -21,10 +21,14 @@ router.use((req, res, next) => {
                               req.ip,
                               moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                           ));
-  parameterFormCheck(
+  go(
     req.body || req.params || req.query,
-    authRq[getUrl(req.originalUrl)]) ? next()
-      : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"});
+    parameterFormCheck,
+    f => f(authRq[getUrl(req.originalUrl)]),
+    result => result
+    ? next()
+    : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"})
+  );
 });
 
 router.post('/check', (req, res) => {
