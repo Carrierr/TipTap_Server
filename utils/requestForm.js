@@ -10,6 +10,11 @@ module.exports = {
         account: 'llgs901@naver.com',
         name: '이기섭'
       },
+      '/auth/login': {
+        type: 'kakao',
+        account: 'llgs901@naver.com',
+        name: '이기섭'
+      }
     },
     accountRq: {
       '/account/update': {

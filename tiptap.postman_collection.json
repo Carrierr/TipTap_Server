@@ -1,211 +1,366 @@
 {
-	"variables": [],
-	"info": {
-		"name": "tiptap",
-		"_postman_id": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
-		"description": "tiptap api",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
-	},
-	"item": [
+	"id": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+	"name": "tiptap",
+	"description": "tiptap api",
+	"order": [
+		"cd4d0a2c-3535-60cf-dbe2-13cec3eca8a6",
+		"783718d5-1889-f0f4-13da-18cc6f3b8c7e",
+		"fc581732-5ec6-988b-ebf3-50845f46dbfd",
+		"a3734b12-2fd2-c160-aa23-6180436db0ee",
+		"6710ad78-b935-288c-f21b-4b6f9735bc76",
+		"151c7d91-3201-c5e6-d308-8ec69dbb9921",
+		"8d903571-8beb-11ac-df8c-358120d30fb6",
+		"f80c19f3-4c12-4f76-d236-98113a76a4bf"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 0,
+	"owner": "2224721",
+	"public": false,
+	"requests": [
 		{
-			"name": "0. create token",
-			"request": {
-				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/token/create",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"gs@naver.com\",\n  \"name\": \"giseoplee\"\n}"
+			"id": "151c7d91-3201-c5e6-d308-8ec69dbb9921",
+			"headers": "tiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/update",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"data": [
+				{
+					"key": "content",
+					"value": "update 최종",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				},
-				"description": "첫 로그인 후 토큰 발급"
-			},
-			"response": []
-		},
-		{
-			"name": "1. sign in",
-			"request": {
-				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/sign/in",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"wonbbang@kakaocorp.com\",\n  \"name\": \"wonBang\"\n}"
+				{
+					"key": "location",
+					"value": "경기도 고양시 덕양구 화정동 533-33",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				},
-				"description": "기존 회원 서드파티 로그인"
-			},
-			"response": []
-		},
-		{
-			"name": "2. write diary",
-			"request": {
-				"url": "127.0.0.1:8081/diary/write",
-				"method": "POST",
-				"header": [
-					{
-						"key": "tiptap-token",
-						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "content",
-							"value": "일기입니다 팁탭 일기에요",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "location",
-							"value": "서울시 금천구 가산동 533-22",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "latitude",
-							"value": "36.806702",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "longitude",
-							"value": "126.979874",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "diaryFile",
-							"description": "",
-							"type": "file",
-							"src": "new_image.jpeg"
-						}
-					]
+				{
+					"key": "latitude",
+					"value": "44.806702",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				},
-				"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)"
-			},
-			"response": []
-		},
-		{
-			"name": "3. get diaries",
-			"request": {
-				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
-				"method": "GET",
-				"header": [
-					{
-						"key": "tiptap-token",
-						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "",
-							"value": "",
-							"description": "",
-							"type": "file"
-						}
-					]
+				{
+					"key": "longitude",
+					"value": "444.4422122",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				},
-				"description": "일기 데이터 조회"
-			},
-			"response": []
-		},
-		{
-			"name": "4. delete diary",
-			"request": {
-				"url": "127.0.0.1:8081/diary/delete",
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json",
-						"description": ""
-					},
-					{
-						"key": "tiptap-token",
-						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"id\": 2\n}"
+				{
+					"key": "id",
+					"value": "6",
+					"description": "",
+					"type": "text",
+					"enabled": true
 				},
-				"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값"
-			},
-			"response": []
-		},
-		{
+				{
+					"key": "diaryFile",
+					"value": "Blackfish720x630.jpg",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
 			"name": "5. update diary",
-			"request": {
-				"url": "127.0.0.1:8081/diary/update",
-				"method": "POST",
-				"header": [
-					{
-						"key": "tiptap-token",
-						"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-						"description": ""
-					}
-				],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "content",
-							"value": "update 로직 테스트",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "location",
-							"value": "경기도 고양시 덕양구 화정동 533-33",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "latitude",
-							"value": "44.806702",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "longitude",
-							"value": "444.4422122",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "id",
-							"value": "6",
-							"description": "",
-							"type": "text"
-						},
-						{
-							"key": "diaryFile",
-							"description": "",
-							"type": "file",
-							"src": "Blackfish720x630.jpg"
-						}
-					]
+			"description": "일기 수정\nid : diary/list 에서 반환되는 id\n나머지 파라메터는 write와 동일",
+			"descriptionFormat": "html",
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"folder": null,
+			"auth": null,
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"events": null,
+			"rawModeData": null,
+			"variables": null
+		},
+		{
+			"id": "6710ad78-b935-288c-f21b-4b6f9735bc76",
+			"headers": "Content-Type: application/json\ntiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"enabled": true,
+					"description": ""
 				},
-				"description": "일기 수정\nid : diary/list 에서 반환되는 id\n나머지 파라메터는 write와 동일"
-			},
-			"response": []
+				{
+					"key": "tiptap-token",
+					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"enabled": true,
+					"description": ""
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"name": "4. delete diary",
+			"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값",
+			"descriptionFormat": "html",
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"folder": null,
+			"auth": null,
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"events": null,
+			"variables": null,
+			"rawModeData": "{\n  \"id\": 1\n}"
+		},
+		{
+			"id": "783718d5-1889-f0f4-13da-18cc6f3b8c7e",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"enabled": true,
+					"description": ""
+				}
+			],
+			"url": "127.0.0.1:8080/auth/sign/in",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"data": [],
+			"dataMode": "raw",
+			"name": "1. sign in",
+			"description": "기존 회원 서드파티 로그인",
+			"descriptionFormat": "html",
+			"time": 1533823674479,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"auth": null,
+			"events": null,
+			"variables": null,
+			"folder": null,
+			"rawModeData": "{\n  \"type\": \"kakao\",\n  \"account\": \"wonbbang@kakaocorp.com\",\n  \"name\": \"wonBang\"\n}"
+		},
+		{
+			"id": "8d903571-8beb-11ac-df8c-358120d30fb6",
+			"headers": "tiptap-token: 25741b7b-8058-4218-9ee6-7ace1f793082\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "25741b7b-8058-4218-9ee6-7ace1f793082",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/today",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "GET",
+			"data": null,
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1534590741956,
+			"name": "6. get today diaries",
+			"description": "get today diaries",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"responses": []
+		},
+		{
+			"id": "a3734b12-2fd2-c160-aa23-6180436db0ee",
+			"headers": "tiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"data": [
+				{
+					"key": "",
+					"value": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"name": "3. get diaries",
+			"description": "일기 데이터 조회",
+			"descriptionFormat": "html",
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"folder": null,
+			"auth": null,
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"events": null,
+			"rawModeData": null,
+			"variables": null
+		},
+		{
+			"id": "cd4d0a2c-3535-60cf-dbe2-13cec3eca8a6",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"enabled": true,
+					"description": ""
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/token/create",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"data": [],
+			"dataMode": "raw",
+			"name": "0. create token",
+			"description": "첫 로그인 후 토큰 발급",
+			"descriptionFormat": "html",
+			"time": 1533823888067,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"auth": null,
+			"events": null,
+			"variables": null,
+			"folder": null,
+			"rawModeData": "{\n  \"type\": \"kakao\",\n  \"account\": \"gs@naver.com\",\n  \"name\": \"giseoplee\"\n}"
+		},
+		{
+			"id": "f80c19f3-4c12-4f76-d236-98113a76a4bf",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1534602389863,
+			"name": "7. login",
+			"description": "sign up + sign in 통합\n첫 로그인 시 회원 가입\n차후 로그인 시 동일한 정보가 들어오면\n기존 토큰 반환",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"responses": [],
+			"rawModeData": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"dororo\"\n}"
+		},
+		{
+			"id": "fc581732-5ec6-988b-ebf3-50845f46dbfd",
+			"headers": "tiptap-token: 25741b7b-8058-4218-9ee6-7ace1f793082\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "25741b7b-8058-4218-9ee6-7ace1f793082",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/write",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [
+				{
+					"key": "content",
+					"value": "삐루루루루루루루루",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "location",
+					"value": "서울시 금천구 가산동 144-229",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "latitude",
+					"value": "236.8067020990290",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "longitude",
+					"value": "126.979874",
+					"description": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "diaryFile",
+					"value": "KakaoTalk_Photo_2017-11-09-21-56-22_66.jpeg",
+					"description": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1534590751524,
+			"name": "2. write diary",
+			"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"responses": []
 		}
 	]
 }

@@ -79,6 +79,38 @@ router.post('/token/create', (req, res) => {
   );
 });
 
+router.post('/login', async (req, res) => {
+  const { type = 'kakao', account, name } = req.body;
+  const data = {
+    name: name,
+    authType: type,
+    thirdPartyAccount: account
+  };
+
+  try {
+    const token = await go(
+        data,
+        options => userModel.findOne({ where: options }),
+        result => { log(result); return result; },
+        result => !!result
+        ? respondJson(res, resultCode.success, { token: result.token })
+        : uuidv4()
+    );
+
+    data.token = token;
+
+    go(
+      data,
+      userModel.create,
+      insertResult => setFirstAuth(insertResult.token, insertResult.id),
+      setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
+    );
+
+  } catch (error) {
+    respondOnError(res, resultCode.error, error.message);
+  }
+});
+
 router.post('/sign/in', (req, res) => {
   const { type, account, name } = req.body;
   const options = {
@@ -87,7 +119,6 @@ router.post('/sign/in', (req, res) => {
       thirdPartyAccount: account,
       name: name
     },
-    attributes: ['token']
   };
 
   go(

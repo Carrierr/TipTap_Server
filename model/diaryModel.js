@@ -13,6 +13,7 @@ const diaryModel = (function () {
         });
     },
     findOne: async function(options) {
+        options.attributes = ['token'];
         return await diary.findOne(options);
     },
     findDeleteTarget: async function(options) {
