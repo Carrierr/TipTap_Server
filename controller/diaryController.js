@@ -185,4 +185,21 @@ router.post('/delete', (req, res) => {
     );
 });
 
+router.get('/today/sample/by/jo', async (req, res) => {
+  try {
+    const { key: user_id, stamp } = await go(
+      req.headers['tiptap-token'],
+      getValue) || {};
+
+    !user_id
+      ? respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      : go(
+        diaryModel.findToday({ where: { user_id } }).exec(),
+        list => respondJson(res, resultCode.success, { list, stamp }))
+
+  } catch (error) {
+    respondOnError(res, resultCode.error, error.message);
+  }
+});
+
 module.exports = router;
