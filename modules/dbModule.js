@@ -1,33 +1,34 @@
-const mysql = require('mysql');
+const mysql = require('mysql2/promise');
 const config = require('../config');
 const util = require('util');
 
 const DBModule = (function(){
+
+  const pool = mysql.createPool({
+      host: config.store.mysqlHost,
+      user: config.store.mysqlUser,
+      password: config.store.mysqlPassword,
+      database: config.store.mysqlDatabase,
+      connectionLimit: config.store.ConnectionLimit,
+  });
+
+  pool.on('enqueue', () => {
+      console.log(util.format("## Waiting for available connection slot ##"));
+  });
+
   return {
-    Init: function () {
-        this._pool = mysql.createPool({
-            host: config.store.mysqlHost,
-            user: config.store.mysqlUser,
-            password: config.store.mysqlPassword,
-            database: config.store.mysqlDatabase,
-            connectionLimit: config.store.ConnectionLimit,
-        });
-        this._pool.on('enqueue', function () {
-            console.log(util.format("## Waiting for available connection slot ##"));
-        });
-    },
-    Query: function (query, value, succEvent) {
-        this._pool.getConnection(function (err, connection) {
-            connection.query(query, value, function (err, rows) {
-                if (err) {
-                    connection.release();
-                    throw err;
-                }
-                succEvent(rows);
-                connection.release();
-            });
-        })
+    query: async function (queryString) {
+        try {
+            const connection = await pool.getConnection(async conn => conn);
+            const result = await connection.query(queryString);
+            connection.release();
+            return first(result);
+        }
+        catch (error) {
+            throw error;
+        }
     }
+  }
 })();
 
 module.exports = DBModule;

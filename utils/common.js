@@ -1,7 +1,9 @@
-const crypto = require("crypto");
+const ripemd160 = require("crypto-js/ripemd160");
+const crypto = require("crypto-js");
 const _ = require('lodash');
 const config = require('../config');
-
+const iv = crypto.enc.Base64.parse('tiptap-iv');
+const auth_key = crypto.enc.Base64.parse(config.server.auth_key);
 
 const Common = (function (){
 
@@ -19,26 +21,18 @@ const Common = (function (){
   ];
 
   return {
-    /* EX) common.Encryption(description, 'aes-256-ctr') */
-    encrypt: function (description, algorithm) {
-      const cipher = crypto.createCipher(algorithm, config.server.auth_key);
-      let encipherContent = cipher.update(description, 'utf8', 'hex');
-      encipherContent += cipher.final('hex');
-      return encipherContent;
+    encrypt: function (content) {
+      return crypto.AES.encrypt(content, auth_key, {iv: iv}).toString();
     },
-    /* EX) common.Decryption(description, 'aes-256-ctr') */
-    decrypt: function (description, algorithm) {
-      const decipher = crypto.createDecipher(algorithm, config.server.auth_key);
-      let decipherContent = decipher.update(description, 'hex', 'utf8');
-      decipherContent += decipher.final('utf8');
-      return decipherContent;
+    decrypt: function (content) {
+      return go(
+        content,
+        content => crypto.AES.decrypt(content.toString(), auth_key, {iv: iv}),
+        bytes => bytes.toString(crypto.enc.Utf8)
+      );
     },
-    /* EX) common.Hashing(description, 'ripemd160WithRSA') */
-    hash: function (description, algorithm) {
-      const hash = crypto.createHash(algorithm);
-      let hashedContent = hash.update(config.server.auth_key + description);
-      hashedContent = hash.digest('hex');
-      return hashedContent;
+    hash: function (content) {
+      return ripemd160(content).toString();
     },
     imagesTypeCheck: function (images) {
       return go(images,
@@ -49,7 +43,7 @@ const Common = (function (){
         )
       ) ? images : false
     },
-    parameterFormCheck: curry((form, param) => (Object.keys(form).length === 0 ? true : isMatch(Object.keys(param), Object.keys(form)))),
+    parameterFormCheck: curry((param, form) => (Object.keys(form).length === 0) ? true : isMatch(Object.keys(param), Object.keys(form))),
     getUrl: (originalUrl) => first(originalUrl.split('?')),
     getRemainStamp: (current) => go(
       stamps,
