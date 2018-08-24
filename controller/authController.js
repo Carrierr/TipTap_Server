@@ -91,7 +91,6 @@ router.post('/login', async (req, res) => {
     const token = await go(
         data,
         options => userModel.findOne({ where: options }),
-        result => { log(result); return result; },
         result => !!result
         ? respondJson(res, resultCode.success, { token: result.token })
         : uuidv4()

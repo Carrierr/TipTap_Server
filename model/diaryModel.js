@@ -21,6 +21,8 @@ const diaryModel = (function () {
         return await diary.findOne(options);
     },
     findAll: async function(options) {
+        log(options);
+        options.order = [['id', 'DESC']];
         return await diary.findAll(options);
     },
     findToday: async function(options) {
@@ -30,8 +32,10 @@ const diaryModel = (function () {
         return await diary.findAll(options);
     },
     delete: async function(options) {
-        log(options)
         return await diary.destroy(options);
+    },
+    count: async function(options) {
+        return diary.count(options);
     }
   }
 })();

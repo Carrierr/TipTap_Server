@@ -32,7 +32,7 @@ router.use((req, res, next) => {
     );
 });
 
-router.post('/write', (req, res) => {
+router.post('/write', async (req, res) => {
     const fileName = req.files ? req.files.diaryFile.name : false;
     const { content, location, latitude, longitude } = req.body;
     const data = {
@@ -41,6 +41,17 @@ router.post('/write', (req, res) => {
         latitude: latitude,
         longitude: longitude
     };
+
+    const { key, stamp = [] } = await go(
+      req.headers['tiptap-token'],
+      getValue,
+      r => { log(r); return r; },
+      obj => obj
+      ? obj
+      : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+    );
+
+    data.user_id = key;
 
     fileName
     ? go(
@@ -58,148 +69,168 @@ router.post('/write', (req, res) => {
         fileWriteResult => fileWriteResult
         ? true
         : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
-        _ => getValue(req.headers['tiptap-token']),
-        session => {
-            data.user_id = session.key;
-            return data;
-        },
-        insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => req.headers['tiptap-token'],
-        getStampPosition,
-        arr => getRemainStamp(arr || []),
+        _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => getRemainStamp(stamp),
         getRandomStamp,
         stamp => setStampPosition(req.headers['tiptap-token'], stamp),
         _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     )
     : go(
-        req.headers['tiptap-token'],
-        getValue,
-        session => {
-            data.user_id = session.key;
-            return data;
-        },
-        insertData => diaryModel.create(insertData).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => req.headers['tiptap-token'],
-        getStampPosition,
-        arr => getRemainStamp(arr || []),
+        _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => getRemainStamp(stamp),
         getRandomStamp,
         stamp => setStampPosition(req.headers['tiptap-token'], stamp),
         _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     );
 });
 
-router.get('/list', (req, res) => {
-    const options = {};
-
-    go(
+router.get('/list', async (req, res) => {
+    try {
+      const { key, stamp = [] } = await go(
         req.headers['tiptap-token'],
         getValue,
-        result => result
-            ? ((key) => { options.where = { user_id: key }; return options; })(result.key)
-            : respondOnError(res, resultCode.error, { desc: 'unknown token' }),
-        options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
-        result => respondJson(res, resultCode.success, { list: result })
-    );
-});
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
 
-router.get('/today', (req, res) => {
-    const options = {};
-    let respondStamp = [];
+      let { page = 1 } = req.query;
+      const { startDate = '2000-01-01', endDate = '3000-12-31', limit = 3 } = req.query;
+      const formatedStartTime = Date.parse(moment(startDate).format());
+      const formatedEndTime = Date.parse(moment(endDate).add(1, 'day').format());
 
-    go(
-        req.headers['tiptap-token'],
-        getValue,
-        result => result
-            ? ((obj) => { respondStamp = obj.stamp; options.where = { user_id: obj.key }; return options; })(result)
-            : respondOnError(res, resultCode.error, { desc: 'unknown token' }),
-        options => diaryModel.findToday(options).catch(e => respondOnError(res, resultCode.error, e.message)),
-        result => respondJson(res, resultCode.success, { list: result, stamp: respondStamp })
-    );
-});
-
-router.post('/update', (req, res) => {
-    const fileName = req.files ? req.files.diaryFile.name : false;
-    const { content, location, latitude, longitude, id } = req.body;
-    const options = {
-        data: {
-            content: content,
-            location: location,
-            latitude: latitude,
-            longitude: longitude
-        },
+      const countOptions = {
         where: {
-            id: id
+          createdAt: { gte: formatedStartTime, lt: formatedEndTime }
         }
-    };
+      };
 
-    fileName
-    ? go(
-        id,
-        target => diaryModel.findDeleteTarget({ where: { id: target } }).catch(e => respondOnError(res, resultCode.error, e.message)),
-        deleteTarget => deleteFile(deleteTarget.imagePath),
-        createDir,
-        dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
-        result => {
-            options.data.imagePath = result.path;
-            options.data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
-            req.files.diaryFile.name = result.name;
-            return req.files;
-        },
-        imagesTypeCheck,
-        writeFile,
-        fileWriteResult => fileWriteResult
-        ? true
-        : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
-        _ => getValue(req.headers['tiptap-token']),
-        session => {
-            options.where.user_id = session.key;
-            return options;
-        },
-        updateData => diaryModel.update(updateData).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
-    )
-    : go(
+      page = parseInt(page);
+
+      const SIZE = parseInt(limit); // 한번에 보여줄 글의 수
+      const BEGIN = (page - 1) * parseInt(limit); //시작 글
+      let totalPage;
+
+      const tableRange = curry((cnt, key) => {
+          totalPage = Math.ceil(cnt / SIZE);
+
+          const options = {};
+          options.order = [['id', 'DESC']];
+          options.where = { createdAt: { gte: formatedStartTime, lt: formatedEndTime }, user_id: key };
+          options.offset = BEGIN;
+          options.limit = SIZE;
+          return options;
+      });
+
+      go(
+          countOptions,
+          options => diaryModel.count(options),
+          tableRange,
+          f => f(key),
+          options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+          result => respondJson(res, resultCode.success, { list: result, total: totalPage, stamp: stamp })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
+});
+
+router.get('/today', async (req, res) => {
+    try {
+      const options = {};
+      const { key, stamp = [] } = await go(
         req.headers['tiptap-token'],
         getValue,
-        session => {
-            options.where.user_id = session.key;
-            return options;
-        },
-        updateData => diaryModel.update(updateData).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
-    );
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+
+      options.where = { user_id: key };
+
+      go(
+        null,
+        _ => diaryModel.findToday(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        result => respondJson(res, resultCode.success, { list: result, stamp: stamp })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
+});
+
+router.post('/update', async (req, res) => {
+    try {
+      const fileName = req.files ? req.files.diaryFile.name : false;
+      const { content, location, latitude, longitude, id } = req.body;
+      const options = {
+          data: {
+              content: content,
+              location: location,
+              latitude: latitude,
+              longitude: longitude
+          },
+          where: {
+              id: id
+          }
+      };
+
+      const { key } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+
+      options.where.user_id = key;
+
+      fileName
+      ? go(
+          id,
+          target => diaryModel.findDeleteTarget({ where: { id: target } }).catch(e => respondOnError(res, resultCode.error, e.message)),
+          deleteTarget => deleteFile(deleteTarget.imagePath),
+          createDir,
+          dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
+          result => {
+              options.data.imagePath = result.path;
+              options.data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
+              req.files.diaryFile.name = result.name;
+              return req.files;
+          },
+          imagesTypeCheck,
+          writeFile,
+          fileWriteResult => fileWriteResult
+          ? true
+          : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
+          _ => diaryModel.update(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+          _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
+      )
+      : go(
+          _ => diaryModel.update(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+          _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
 });
 
 router.post('/delete', (req, res) => {
-    const { id } = req.body;
-    const options = {
-        where: {
-            id: id
-        }
-    };
+    try {
+      const { id } = req.body;
+      const options = {
+          where: {
+              id: id
+          }
+      };
 
-    go(
-        null,
-        _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
-    );
-});
-
-router.get('/today/sample/by/jo', async (req, res) => {
-  try {
-    const { key: user_id, stamp } = await go(
-      req.headers['tiptap-token'],
-      getValue) || {};
-
-    !user_id
-      ? respondOnError(res, resultCode.error, { desc: 'unknown token' })
-      : go(
-        diaryModel.findToday({ where: { user_id } }).exec(),
-        list => respondJson(res, resultCode.success, { list, stamp }))
-
-  } catch (error) {
-    respondOnError(res, resultCode.error, error.message);
-  }
+      go(
+          null,
+          _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+          _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
 });
 
 module.exports = router;

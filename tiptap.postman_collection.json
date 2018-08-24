@@ -10,7 +10,9 @@
 		"6710ad78-b935-288c-f21b-4b6f9735bc76",
 		"151c7d91-3201-c5e6-d308-8ec69dbb9921",
 		"8d903571-8beb-11ac-df8c-358120d30fb6",
-		"f80c19f3-4c12-4f76-d236-98113a76a4bf"
+		"f80c19f3-4c12-4f76-d236-98113a76a4bf",
+		"6189c889-9907-9407-f8b5-d2b9a1f1dddf",
+		"31aea784-88ab-23ae-2c3d-abbc68fc59f1"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -91,6 +93,110 @@
 			"events": null,
 			"rawModeData": null,
 			"variables": null
+		},
+		{
+			"id": "31aea784-88ab-23ae-2c3d-abbc68fc59f1",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?startDate=2018-08-24&endDate=2018-08-25&page=2&limit=3",
+			"queryParams": [
+				{
+					"key": "startDate",
+					"value": "2018-08-24",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "endDate",
+					"value": "2018-08-25",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "page",
+					"value": "2",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "limit",
+					"value": "3",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"data": null,
+			"dataMode": "params",
+			"name": "9. get diaries with pagination",
+			"description": "page : 현재 불러올 페이지\nlimit : 페이징당 가져올 데이터 수",
+			"descriptionFormat": "html",
+			"time": 1535134678249,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "6189c889-9907-9407-f8b5-d2b9a1f1dddf",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?startDate=2018-08-24&endDate=2018-08-25",
+			"queryParams": [
+				{
+					"key": "startDate",
+					"value": "2018-08-24",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "endDate",
+					"value": "2018-08-25",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "GET",
+			"collectionId": "221e53b0-93f8-2213-7bf9-408f6985ba4b",
+			"data": null,
+			"dataMode": "params",
+			"name": "8. get diaries of date range",
+			"description": "startDate : 시작날짜\nendDate : 종료날짜\n미지정 시 가장 최근 순으로 가져옴",
+			"descriptionFormat": "html",
+			"time": 1535134545524,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
 		},
 		{
 			"id": "6710ad78-b935-288c-f21b-4b6f9735bc76",

@@ -4,7 +4,6 @@ const util = require('util');
 const moment = require('moment-timezone');
 
 const config = require('../config');
-const common = require('../utils/common');
 
 const RedisModule = (function () {
   const redis = new ioRedis(
@@ -59,7 +58,8 @@ const RedisModule = (function () {
           obj => RedisModule.setValue(key, obj)
         );
       }
-    )
+    ),
+    stream: redis.scanStream({ count: 10 })
   }
 })();
 
