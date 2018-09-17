@@ -21,7 +21,6 @@ const diaryModel = (function () {
         return await diary.findOne(options);
     },
     findAll: async function(options) {
-        log(options);
         options.order = [['id', 'DESC']];
         return await diary.findAll(options);
     },

@@ -128,7 +128,7 @@ router.get('/list', async (req, res) => {
           tableRange,
           f => f(key),
           options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
-          result => respondJson(res, resultCode.success, { list: result, total: totalPage, stamp: stamp })
+          result => respondJson(res, resultCode.success, { list: monthlyConvert(result), total: totalPage, stamp: stamp })
       );
     } catch (error) {
       respondOnError(res, resultCode.error, error.message);
@@ -232,5 +232,22 @@ router.post('/delete', (req, res) => {
       respondOnError(res, resultCode.error, error.message);
     }
 });
+
+function monthlyConvert(list) {
+    const newList = map(obj => obj.dataValues, list);
+    const result = {};
+
+    for (let i = 0; i < 12; i++) {
+        result[moment().month(i).format('YYYYMM')] = [];
+    }
+
+    each(obj => {
+        result[moment(obj.createdAt).format('YYYYMM')].push(obj);
+    }, newList);
+    
+    return filter(data => {
+        if (data.length > 0) return data;
+    }, result);
+}
 
 module.exports = router;
