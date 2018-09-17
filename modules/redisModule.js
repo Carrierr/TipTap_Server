@@ -22,6 +22,22 @@ const RedisModule = (function () {
   return {
     getValue: async (key) => await redis.get(key).then(v => JSON.parse(v)).catch(e => e.message),
     setValue: async (key, value) => await redis.set(key, JSON.stringify(value)).catch(e => e.message),
+    updateValue: async (key, valueObj = { key: shared, value: 1 }) => {
+      try {
+        return go(
+          key,
+          RedisModule.getValue,
+          originObj => {
+            originObj[valueObj.key] = valueObj.value;
+            return originObj;
+          },
+          updateObj => RedisModule.setValue(key, updateObj),
+          result => result
+        );
+      } catch (error) {
+        throw error;
+      }
+    },
     setFirstAuth: async (key, value) => {
       const auth = {
         auth: true,

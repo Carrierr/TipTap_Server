@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
 const { diaryModel } = require('../model');
-const { getValue, setStampPosition, getStampPosition } = require('../modules/redisModule');
+const { getValue, setStampPosition, updateValue } = require('../modules/redisModule');
 const { writeFile, deleteFile, createDir, createSaveFileData } = require('../modules/fileModule');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl, imagesTypeCheck, getRemainStamp, getRandomStamp } = require('../utils/common');
@@ -45,7 +45,6 @@ router.post('/write', async (req, res) => {
     const { key, stamp = [] } = await go(
       req.headers['tiptap-token'],
       getValue,
-      r => { log(r); return r; },
       obj => obj
       ? obj
       : respondOnError(res, resultCode.error, { desc: 'unknown token' })
@@ -129,6 +128,60 @@ router.get('/list', async (req, res) => {
           f => f(key),
           options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
           result => respondJson(res, resultCode.success, { list: monthlyConvert(result), total: totalPage, stamp: stamp })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
+});
+
+router.get('/random', async (req, res) => {
+    try {
+      let { key, readed = [] } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+
+      const options = {
+        where: {
+          id: { notIn: readed },
+          user_id: { not: key },
+          shared: 1
+        },
+        limit: 1
+      };
+
+      go(
+          options,
+          diaryModel.getRandomDiaryOne,
+          result => {
+            if (result.length === 0) respondOnError(res, resultCode.error, 'no more data');
+            const { user_id, createdAt } = result[0].dataValues;
+            const options = {
+                where: {
+                    user_id: user_id,
+                    createdAt: {
+                        $between: [
+                            `${moment(createdAt).format('YYYY-MM-DD')} 00:00:00`,
+                            `${moment(createdAt).add('days', 1).format('YYYY-MM-DD')} 00:00:00`           
+                        ]
+                    }
+                }
+            };
+            return options;
+          },
+          diaryModel.findAll,
+          data => {
+              return go(
+                  null,
+                  _ => updateValue(req.headers['tiptap-token'], { key: 'readed' ,value: readed.concat(map(ele => ele.dataValues.id, data)) })
+                  .catch(error => respondOnError(res, resultCode.error, error.message)),
+                  _ => data
+              );
+          },
+          result => respondJson(res, resultCode.success, { data: result })
       );
     } catch (error) {
       respondOnError(res, resultCode.error, error.message);

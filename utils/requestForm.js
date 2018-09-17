@@ -27,6 +27,7 @@ module.exports = {
     },
     diaryRq: {
       '/diary/list': {},
+      '/diary/random': {},
       '/diary/today': {},
       '/diary/write': {
         	content: "tiptap diary content",

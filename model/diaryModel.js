@@ -1,5 +1,6 @@
 const { diary } = require('../entity');
 const moment = require('moment');
+const sequelize = require('sequelize');
 
 const diaryModel = (function () {
   return {
@@ -35,6 +36,11 @@ const diaryModel = (function () {
     },
     count: async function(options) {
         return diary.count(options);
+    },
+    getRandomDiaryOne: async (options) => {
+        options.order = [sequelize.fn('RAND')];
+        options.attributes = ['user_id', 'createdAt'];
+        return await diary.findAll(options);
     }
   }
 })();
