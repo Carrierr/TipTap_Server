@@ -100,6 +100,7 @@ router.get('/list', async (req, res) => {
 
       const countOptions = {
         where: {
+          user_id: key,
           createdAt: { gte: formatedStartTime, lt: formatedEndTime }
         }
       };
@@ -112,7 +113,6 @@ router.get('/list', async (req, res) => {
 
       const tableRange = curry((cnt, key) => {
           totalPage = Math.ceil(cnt / SIZE);
-
           const options = {};
           options.order = [['id', 'DESC']];
           options.where = { createdAt: { gte: formatedStartTime, lt: formatedEndTime }, user_id: key };

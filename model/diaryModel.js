@@ -23,6 +23,7 @@ const diaryModel = (function () {
     },
     findAll: async function(options) {
         options.order = [['id', 'DESC']];
+        log(options);
         return await diary.findAll(options);
     },
     findToday: async function(options) {
