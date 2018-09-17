@@ -31,54 +31,6 @@ router.use((req, res, next) => {
   );
 });
 
-router.post('/check', (req, res) => {
-
-  const { version, auth } = req.body;
-  const options = {
-    attributes: ['version'],
-    order: [['id', 'DESC']]
-  };
-
-  authModel.versionCheck(options)
-  .then(result => go(result,
-    R => {
-      const report = {};
-      report.version = R.dataValues.version == version ? true : false;
-      getValue(auth)
-      .then(authR => {
-        !!authR ? respondJson(res, resultCode.success,
-          ((r, a) => {
-            r.auth = (JSON.parse(a)).auth;
-            return r;
-          })(report, authR))
-            : setDefaultKey(uuidv4())
-              .then(setR => {
-                report.auth = setR;
-                respondJson(res, resultCode.generateKey, report);
-              });
-      });
-    }
-  ))
-  .catch(e => respondOnError(res, resultCode.error, e.message));
-});
-
-router.post('/token/create', (req, res) => {
-  const { type, account, name } = req.body;
-  const data = {
-    name: name,
-    authType: type,
-    thirdPartyAccount: account,
-    token: uuidv4()
-  };
-
-  go(
-    data,
-    v => userModel.create(v).catch(e => respondOnError(res, resultCode.error, e.message)),
-    insertResult => setFirstAuth(insertResult.token, insertResult.id),
-    setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
-  );
-});
-
 router.post('/login', async (req, res) => {
   const { type = 'kakao', account, name } = req.body;
   const data = {
@@ -108,25 +60,6 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     respondOnError(res, resultCode.error, error.message);
   }
-});
-
-router.post('/sign/in', (req, res) => {
-  const { type, account, name } = req.body;
-  const options = {
-    where: {
-      authType: type,
-      thirdPartyAccount: account,
-      name: name
-    },
-  };
-
-  go(
-      options,
-      v => userModel.findOne(v).catch(e => respondOnError(res, resultCode.error, e.message)),
-      result => result
-      ? respondJson(res, resultCode.success, { token: result.token })
-      : respondOnError(res, resultCode.error, { desc: 'not found user' })
-  );
 });
 
 module.exports = router;
