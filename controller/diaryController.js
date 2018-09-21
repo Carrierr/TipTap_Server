@@ -42,6 +42,8 @@ router.post('/write', async (req, res) => {
         longitude: longitude
     };
 
+    log(data);
+
     const { key, stamp = [] } = await go(
       req.headers['tiptap-token'],
       getValue,
@@ -75,6 +77,7 @@ router.post('/write', async (req, res) => {
         _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
     )
     : go(
+        null,
         _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
         _ => getRemainStamp(stamp),
         getRandomStamp,
@@ -286,8 +289,38 @@ router.post('/delete', (req, res) => {
     }
 });
 
-function monthlyConvert(list) {
-    const newList = map(obj => obj.dataValues, list);
+function monthlyConvert(arg) {
+    // const list = map(obj => obj.dataValues, arg);
+    // const result = reduce((acc, obj) => {
+    //     return acc.length > 0 ?
+    //     go(
+    //         null,
+    //         _ => find(val => {
+    //             return val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM');
+    //         }, acc),
+    //         result => {
+    //             log(result);
+    //             if (!result) {
+    //                 acc.push({
+    //                     year: moment(obj.createdAt).format('YYYY'),
+    //                     month: moment(obj.createdAt).format('MM'),
+    //                     datas: [].push(obj)
+    //                 });
+    //             };
+    //             return acc;
+    //         }
+    //     )
+    //     : (() => {
+    //         acc.push({
+    //             year: moment(obj.createdAt).format('YYYY'),
+    //             month: moment(obj.createdAt).format('MM'),
+    //             datas: [].push(obj)
+    //         });
+    //         return acc;
+    //     })();
+    // }, list, []);
+    // return result;
+    const newList = map(obj => obj.dataValues, arg);
     const result = {};
 
     for (let i = 0; i < 12; i++) {

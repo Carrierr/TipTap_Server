@@ -5,6 +5,8 @@ const sequelize = require('sequelize');
 const diaryModel = (function () {
   return {
     create: async function(data) {
+        log('not in data?');
+        log(data);
         return await diary.create(data);
     },
     update: async function(options) {
@@ -23,7 +25,6 @@ const diaryModel = (function () {
     },
     findAll: async function(options) {
         options.order = [['id', 'DESC']];
-        log(options);
         return await diary.findAll(options);
     },
     findToday: async function(options) {
