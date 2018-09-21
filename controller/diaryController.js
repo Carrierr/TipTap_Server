@@ -290,50 +290,32 @@ router.post('/delete', (req, res) => {
 });
 
 function monthlyConvert(arg) {
-    // const list = map(obj => obj.dataValues, arg);
-    // const result = reduce((acc, obj) => {
-    //     return acc.length > 0 ?
-    //     go(
-    //         null,
-    //         _ => find(val => {
-    //             return val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM');
-    //         }, acc),
-    //         result => {
-    //             log(result);
-    //             if (!result) {
-    //                 acc.push({
-    //                     year: moment(obj.createdAt).format('YYYY'),
-    //                     month: moment(obj.createdAt).format('MM'),
-    //                     datas: [].push(obj)
-    //                 });
-    //             };
-    //             return acc;
-    //         }
-    //     )
-    //     : (() => {
-    //         acc.push({
-    //             year: moment(obj.createdAt).format('YYYY'),
-    //             month: moment(obj.createdAt).format('MM'),
-    //             datas: [].push(obj)
-    //         });
-    //         return acc;
-    //     })();
-    // }, list, []);
-    // return result;
-    const newList = map(obj => obj.dataValues, arg);
-    const result = {};
-
-    for (let i = 0; i < 12; i++) {
-        result[moment().month(i).format('YYYYMM')] = [];
-    }
-
-    each(obj => {
-        result[moment(obj.createdAt).format('YYYYMM')].push(obj);
-    }, newList);
-    
-    return filter(data => {
-        if (data.length > 0) return data;
-    }, result);
+    const list = map(obj => obj.dataValues, arg);
+    return reduce((acc, obj) => {
+        return acc.length > 0 ?
+        go(
+            null,
+            _ => find((val) => val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM'), acc),
+            result => {
+                !result ?
+                acc.push({
+                    year: moment(obj.createdAt).format('YYYY'),
+                    month: moment(obj.createdAt).format('MM'),
+                    datas: Array(obj)
+                })
+                : acc[acc.findIndex(item => item.year === result.year && item.month === result.month)].datas.push(obj);
+                return acc;
+            }
+        )
+        : (() => {
+            acc.push({
+                year: moment(obj.createdAt).format('YYYY'),
+                month: moment(obj.createdAt).format('MM'),
+                datas: Array(obj)
+            });
+            return acc;
+        })();
+    }, list, []);
 }
 
 module.exports = router;
