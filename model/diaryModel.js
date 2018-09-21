@@ -5,8 +5,6 @@ const sequelize = require('sequelize');
 const diaryModel = (function () {
   return {
     create: async function(data) {
-        log('not in data?');
-        log(data);
         return await diary.create(data);
     },
     update: async function(options) {
