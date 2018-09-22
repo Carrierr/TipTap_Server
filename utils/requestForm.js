@@ -29,6 +29,7 @@ module.exports = {
       '/diary/list': {},
       '/diary/random': {},
       '/diary/today': {},
+      '/diary/detail': {},
       '/diary/write': {
         	content: "tiptap diary content",
         	location: "서울시 금천구 가산동 533-22",

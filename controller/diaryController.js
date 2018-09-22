@@ -86,6 +86,35 @@ router.post('/write', async (req, res) => {
     );
 });
 
+router.get('/detail', async (req, res) => {
+  try {
+    await go(
+      req.headers['tiptap-token'],
+      getValue,
+      obj => obj
+      ? obj
+      : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+    );
+
+    const { id } = req.query;
+    const options = {
+      where: {
+        id: id
+      }
+    };
+
+    go(
+      options,
+      diaryModel.findAll,
+      result => result.length > 0 ?
+      respondJson(res, resultCode.success, { data: result[0] })
+      : respondJson(res, resultCode.error, { desc: 'not found diary matches id' })
+    );
+  } catch (error) {
+    respondOnError(res, resultCode.error, error.message);
+  }
+});
+
 router.get('/list', async (req, res) => {
     try {
       const { key, stamp = [] } = await go(
@@ -168,7 +197,7 @@ router.get('/random', async (req, res) => {
                     createdAt: {
                         $between: [
                             `${moment(createdAt).format('YYYY-MM-DD')} 00:00:00`,
-                            `${moment(createdAt).add('days', 1).format('YYYY-MM-DD')} 00:00:00`           
+                            `${moment(createdAt).add('days', 1).format('YYYY-MM-DD')} 00:00:00`
                         ]
                     }
                 }
@@ -275,7 +304,9 @@ router.post('/delete', (req, res) => {
       const { id } = req.body;
       const options = {
           where: {
-              id: id
+              id: {
+                $in: id
+              }
           }
       };
 
