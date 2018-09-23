@@ -304,9 +304,7 @@ router.post('/delete', (req, res) => {
       const { id } = req.body;
       const options = {
           where: {
-              id: {
-                $in: id
-              }
+              id: id
           }
       };
 
