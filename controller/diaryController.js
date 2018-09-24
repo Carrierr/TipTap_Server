@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
 const { diaryModel } = require('../model');
-const { getValue, setStampPosition, updateValue } = require('../modules/redisModule');
+const { getValue, setValue, updateSession, updateValue, deleteStampAndMapper } = require('../modules/redisModule');
 const { writeFile, deleteFile, createDir, createSaveFileData } = require('../modules/fileModule');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl, imagesTypeCheck, getRemainStamp, getRandomStamp } = require('../utils/common');
@@ -33,62 +33,74 @@ router.use((req, res, next) => {
 });
 
 router.post('/write', async (req, res) => {
-    const fileName = req.files ? req.files.diaryFile.name : false;
-    const { content, location, latitude, longitude } = req.body;
-    const data = {
-        content: content,
-        location: location,
-        latitude: latitude,
-        longitude: longitude
-    };
+    try {
+      const fileName = req.files ? req.files.diaryFile.name : false;
+      const { content, location, latitude, longitude } = req.body;
+      const data = {
+          content: content,
+          location: location,
+          latitude: latitude,
+          longitude: longitude
+      };
+      let diaryToStampMapperIndex;
 
-    log(data);
+      const { key, stamp = [], todayIndex = 0 } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
 
-    const { key, stamp = [] } = await go(
-      req.headers['tiptap-token'],
-      getValue,
-      obj => obj
-      ? obj
-      : respondOnError(res, resultCode.error, { desc: 'unknown token' })
-    );
+      data.user_id = key;
+      data.todayIndex = todayIndex + 1;
 
-    data.user_id = key;
-
-    fileName
-    ? go(
-        null,
-        createDir,
-        dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
-        result => {
-            data.imagePath = result.path;
-            data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
-            req.files.diaryFile.name = result.name;
-            return req.files;
-        },
-        imagesTypeCheck,
-        writeFile,
-        fileWriteResult => fileWriteResult
-        ? true
-        : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
-        _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => getRemainStamp(stamp),
-        getRandomStamp,
-        stamp => setStampPosition(req.headers['tiptap-token'], stamp),
-        _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
-    )
-    : go(
-        null,
-        _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
-        _ => getRemainStamp(stamp),
-        getRandomStamp,
-        stamp => setStampPosition(req.headers['tiptap-token'], stamp),
-        _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
-    );
+      fileName
+      ? go(
+          null,
+          createDir,
+          dir => createSaveFileData(fileName, dir, req.headers['tiptap-token']),
+          result => {
+              data.imagePath = result.path;
+              data.imageUrl = `${baseUrl}/${moment().tz('Asia/Seoul').format('YYYYMMDD')}/${result.name}`;
+              req.files.diaryFile.name = result.name;
+              return req.files;
+          },
+          imagesTypeCheck,
+          writeFile,
+          fileWriteResult => fileWriteResult
+          ? true
+          : respondOnError(res, resultCode.error, {'desc' : 'file write fail'}),
+          _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
+          result => {
+            diaryToStampMapperIndex = result.dataValues.id;
+            return result;
+          },
+          _ => getRemainStamp(stamp),
+          getRandomStamp,
+          stamp => updateSession(req.headers['tiptap-token'], stamp, data.todayIndex, diaryToStampMapperIndex),
+          _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
+      )
+      : go(
+          null,
+          _ => diaryModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
+          result => {
+            diaryToStampMapperIndex = result.dataValues.id;
+            return result;
+          },
+          _ => getRemainStamp(stamp),
+          getRandomStamp,
+          stamp => updateSession(req.headers['tiptap-token'], stamp, data.todayIndex, diaryToStampMapperIndex),
+          _ => respondJson(res, resultCode.success, { desc: 'completed write diary' })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
 });
 
 router.get('/detail', async (req, res) => {
   try {
-    await go(
+    const { key } = await go(
       req.headers['tiptap-token'],
       getValue,
       obj => obj
@@ -99,7 +111,8 @@ router.get('/detail', async (req, res) => {
     const { id } = req.query;
     const options = {
       where: {
-        id: id
+        id: id,
+        user_id: key
       }
     };
 
@@ -126,7 +139,7 @@ router.get('/list', async (req, res) => {
       );
 
       let { page = 1 } = req.query;
-      const { startDate = '2000-01-01', endDate = '3000-12-31', limit = 3 } = req.query;
+      const { startDate = '2000-01-01', endDate = '3000-12-31', limit = 1000 } = req.query;
       const formatedStartTime = Date.parse(moment(startDate).format());
       const formatedEndTime = Date.parse(moment(endDate).add(1, 'day').format());
 
@@ -299,17 +312,27 @@ router.post('/update', async (req, res) => {
     }
 });
 
-router.post('/delete', (req, res) => {
+router.post('/delete', async (req, res) => {
     try {
+      const { key } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
       const { id } = req.body;
       const options = {
           where: {
-              id: id
+              id: id,
+              user_id: key
           }
       };
 
       go(
-          null,
+          req.headers['tiptap-token'],
+          deleteStampAndMapper,
+          f => f(id),
           _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
           _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
       );
@@ -324,7 +347,7 @@ function monthlyConvert(arg) {
         return acc.length > 0 ?
         go(
             null,
-            _ => find((val) => val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM'), acc),
+            _ => find(val => val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM'), acc),
             result => {
                 !result ?
                 acc.push({

@@ -58,7 +58,7 @@ const RedisModule = (function () {
         result => result.stamp
       );
     },
-    setStampPosition: curry(function (key, stamp) {
+    updateSession: curry(function (key, stamp, todayIndex, mapper) {
       return go(
           key,
           key => RedisModule.getValue(key),
@@ -69,12 +69,45 @@ const RedisModule = (function () {
               result.stamp = [];
               result.stamp.push(stamp);
             })();
+
+            result.diaryToStampMapper
+            ? (() => {
+              result.diaryToStampMapper[mapper] = stamp;
+            })()
+            : (() => {
+              result.diaryToStampMapper = {};
+              result.diaryToStampMapper[mapper] = stamp;
+            })();
+
+            result.todayIndex = todayIndex;
             return result;
           },
           obj => RedisModule.setValue(key, obj)
         );
       }
     ),
+    deleteStampAndMapper: curry(function (key, target) {
+      log(target);
+      return go(
+        key,
+        RedisModule.getValue,
+        obj => {
+          target instanceof Array
+          ? (() => {
+            each(targetItem => {
+              obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[targetItem]), 1);
+              delete obj.diaryToStampMapper[targetItem];
+            }, target)
+          })()
+          : (() => {
+            obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[target]), 1);
+            delete obj.diaryToStampMapper[target];
+          })();
+          return obj;
+        },
+        result => RedisModule.setValue(key, result)
+      );
+    }),
     stream: redis.scanStream({ count: 10 })
   }
 })();

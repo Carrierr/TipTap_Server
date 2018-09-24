@@ -26,6 +26,7 @@ const diaryModel = (function () {
         return await diary.findAll(options);
     },
     findToday: async function(options) {
+        options.order = [['id', 'DESC']];
         options.where.createdAt = {
           $gte: `${moment().tz('Asia/Seoul').format('YYYY-MM-DD')} 00:00:00`
         }
