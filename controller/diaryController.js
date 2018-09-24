@@ -108,11 +108,11 @@ router.get('/detail', async (req, res) => {
       : respondOnError(res, resultCode.error, { desc: 'unknown token' })
     );
 
-    const { id } = req.query;
+    const { date } = req.query;
     const options = {
       where: {
-        id: id,
-        user_id: key
+        user_id: key,
+        createdAt: { gte: moment(date).format('YYYY-MM-DD'), lt: moment(date).add(1, 'days').format('YYYY-MM-DD') }
       }
     };
 
@@ -120,8 +120,8 @@ router.get('/detail', async (req, res) => {
       options,
       diaryModel.findAll,
       result => result.length > 0 ?
-      respondJson(res, resultCode.success, { data: result[0] })
-      : respondJson(res, resultCode.error, { desc: 'not found diary matches id' })
+      respondJson(res, resultCode.success, { data: result })
+      : respondJson(res, resultCode.error, { desc: 'not found diary matches date' })
     );
   } catch (error) {
     respondOnError(res, resultCode.error, error.message);
@@ -141,7 +141,7 @@ router.get('/list', async (req, res) => {
       let { page = 1 } = req.query;
       const { startDate = '2000-01-01', endDate = '3000-12-31', limit = 1000 } = req.query;
       const formatedStartTime = Date.parse(moment(startDate).format());
-      const formatedEndTime = Date.parse(moment(endDate).add(1, 'day').format());
+      const formatedEndTime = Date.parse(moment(endDate).add(1, 'days').format());
 
       const countOptions = {
         where: {
@@ -210,7 +210,7 @@ router.get('/random', async (req, res) => {
                     createdAt: {
                         $between: [
                             `${moment(createdAt).format('YYYY-MM-DD')} 00:00:00`,
-                            `${moment(createdAt).add('days', 1).format('YYYY-MM-DD')} 00:00:00`
+                            `${moment(createdAt).add(1, 'days').format('YYYY-MM-DD')} 00:00:00`
                         ]
                     }
                 }
