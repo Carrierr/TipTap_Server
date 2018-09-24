@@ -47,6 +47,7 @@ const diary = sequelizeInstance.define('diary', {
     longitude: { type : sequelize.STRING(30), allowNull : false }, // 위도
     star: { type: sequelize.SMALLINT.UNSIGNED, allowNull: true, defaultValue : 0 },
     shared: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 공유된 다이어리인지 판단
+    todayIndex: { type : sequelize.TINYINT.UNSIGNED, allowNull : false }, // 금일 작성된 다이어리의 인덱스
 },
 {
     charset: 'utf8',

@@ -9,7 +9,7 @@ stream.on('data', (keys, err) => {
           key,
           getValue,
           obj => obj.stamp
-            ? (() => { delete obj.stamp; return obj; })()
+            ? (() => { delete obj.stamp; delete obj.todayIndex; delete obj.diaryToStampMapper; return obj; })()
             : obj,
           resetObj => setValue(key, resetObj)
         ), keys),
