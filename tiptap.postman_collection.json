@@ -31,7 +31,7 @@
 					"enabled": true
 				}
 			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?page=1&limit=10",
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?page=1&limit=20",
 			"folder": null,
 			"queryParams": [
 				{
@@ -43,7 +43,7 @@
 				},
 				{
 					"key": "limit",
-					"value": "10",
+					"value": "20",
 					"equals": true,
 					"description": "",
 					"enabled": true
@@ -58,7 +58,7 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1537810478752,
+			"time": 1537860551008,
 			"name": "7. get diaries with pagination",
 			"description": "page : 현재 불러올 페이지\nlimit : 페이징당 가져올 데이터 수",
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
@@ -377,14 +377,27 @@
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
 		},
 		{
-			"folder": null,
 			"id": "dee71f17-d3dc-7708-a3aa-b1f98ebb1172",
-			"name": "0. write diary",
-			"dataMode": "params",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/write",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
 			"data": [
 				{
 					"key": "content",
-					"value": "삐루루루루루루루루",
+					"value": "diary content",
 					"type": "text",
 					"enabled": true
 				},
@@ -408,33 +421,18 @@
 				},
 				{
 					"key": "diaryFile",
+					"value": "",
 					"type": "file",
 					"enabled": true
 				}
 			],
-			"auth": null,
-			"events": null,
-			"rawModeData": null,
-			"descriptionFormat": null,
-			"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)",
-			"variables": null,
-			"headers": "tiptap-token: 25741b7b-8058-4218-9ee6-7ace1f793082\n",
-			"method": "POST",
-			"pathVariables": {},
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/write",
-			"preRequestScript": null,
+			"dataMode": "params",
 			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"queryParams": [],
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "25741b7b-8058-4218-9ee6-7ace1f793082",
-					"enabled": true
-				}
-			],
-			"pathVariableData": [],
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1537860543298,
+			"name": "0. write diary",
+			"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)",
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
 		}
 	]

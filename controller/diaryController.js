@@ -172,7 +172,10 @@ router.get('/list', async (req, res) => {
           tableRange,
           f => f(key),
           options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
-          result => respondJson(res, resultCode.success, { list: monthlyConvert(result), total: totalPage, stamp: stamp })
+          result => respondJson(res, resultCode.success, { list: go(
+            result,
+            monthlyConvert
+          ), total: totalPage, stamp: stamp })
       );
     } catch (error) {
       respondOnError(res, resultCode.error, error.message);
@@ -341,7 +344,11 @@ router.post('/delete', async (req, res) => {
     }
 });
 
-function monthlyConvert(arg) {
+/**
+ * @desc monthlyConvert 함수 초기 버전
+ * @return year, month 객체 내 해당 월에 대한 데이터를 모두 응답
+
+function monthlyConvert (arg) {
     const list = map(obj => obj.dataValues, arg);
     return reduce((acc, obj) => {
         return acc.length > 0 ?
@@ -364,6 +371,58 @@ function monthlyConvert(arg) {
                 year: moment(obj.createdAt).format('YYYY'),
                 month: moment(obj.createdAt).format('MM'),
                 datas: Array(obj)
+            });
+            return acc;
+        })();
+    }, list, []);
+}
+*/
+
+function monthlyConvert (arg) {
+    const list = map(obj => obj.dataValues, arg);
+    return reduce((acc, obj) => {
+        return acc.length > 0 ?
+        go(
+            null,
+            _ => find(val => val.year === moment(obj.createdAt).format('YYYY') && val.month === moment(obj.createdAt).format('MM'), acc),
+            result => {
+                !result ? acc.push({
+                      year: moment(obj.createdAt).format('YYYY'),
+                      month: moment(obj.createdAt).format('MM'),
+                      datas: Object.assign(((obj) => {
+                          const dayObj = {};
+                          dayObj[moment(obj.createdAt).format('DD')] = {
+                            lastDiary: obj
+                          };
+                          return dayObj;
+                      })(obj), {})
+                  })
+                : (() => {
+                  const idx = acc.findIndex(item => item.year === result.year && item.month === result.month);
+                  acc[idx].datas[moment(obj.createdAt).format('DD')] ?
+                  acc[idx].datas[moment(obj.createdAt).format('DD')].firstDiary = obj
+                  : ((obj) => {
+                    const dayObj = {};
+                    dayObj[moment(obj.createdAt).format('DD')] = {
+                      lastDiary: obj
+                    };
+                    acc[idx].datas = Object.assign(dayObj, acc[idx].datas);
+                  })(obj)
+                })();
+                return acc;
+            }
+        )
+        : (() => {
+            acc.push({
+                year: moment(obj.createdAt).format('YYYY'),
+                month: moment(obj.createdAt).format('MM'),
+                datas: Object.assign(((obj) => {
+                    const dayObj = {};
+                    dayObj[moment(obj.createdAt).format('DD')] = {
+                      lastDiary: obj
+                    };
+                    return dayObj;
+                })(obj), {})
             });
             return acc;
         })();
