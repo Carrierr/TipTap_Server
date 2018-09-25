@@ -1,6 +1,7 @@
 const { diary } = require('../entity');
 const moment = require('moment');
 const sequelize = require('sequelize');
+const { query } = require('../modules/dbModule');
 
 const diaryModel = (function () {
   return {
@@ -42,6 +43,14 @@ const diaryModel = (function () {
         options.order = [sequelize.fn('RAND')];
         options.attributes = ['user_id', 'createdAt'];
         return await diary.findAll(options);
+    },
+    findDataRangeResource: function (key) {
+      return go(
+        null,
+        _ => `select date_format(createdAt, '%Y-%m-01') as date from diaries where user_id = ${key} group by date_format(createdAt, '%M %Y') order by id desc`,
+        queryString => query(queryString),
+        rows => map(row => row.date, rows)
+      )
     }
   }
 })();

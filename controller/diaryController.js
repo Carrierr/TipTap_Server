@@ -120,7 +120,7 @@ router.get('/detail', async (req, res) => {
       options,
       diaryModel.findAll,
       result => result.length > 0 ?
-      respondJson(res, resultCode.success, { data: result })
+      respondJson(res, resultCode.success, { data: { list : result } })
       : respondJson(res, resultCode.error, { desc: 'not found diary matches date' })
     );
   } catch (error) {
@@ -138,37 +138,25 @@ router.get('/list', async (req, res) => {
         : respondOnError(res, resultCode.error, { desc: 'unknown token' })
       );
 
-      let { page = 1 } = req.query;
-      const { startDate = '2000-01-01', endDate = '3000-12-31', limit = 1000 } = req.query;
-      const formatedStartTime = Date.parse(moment(startDate).format());
-      const formatedEndTime = Date.parse(moment(endDate).add(1, 'days').format());
-
-      const countOptions = {
-        where: {
-          user_id: key,
-          createdAt: { gte: formatedStartTime, lt: formatedEndTime }
-        }
-      };
+      let { page = 1, limit = 1000, totalPage = 0 } = req.query;
 
       page = parseInt(page);
+      limit = parseInt(limit);
 
-      const SIZE = parseInt(limit); // 한번에 보여줄 글의 수
-      const BEGIN = (page - 1) * parseInt(limit); //시작 글
-      let totalPage;
-
-      const tableRange = curry((cnt, key) => {
-          totalPage = Math.ceil(cnt / SIZE);
+      const tableRange = curry((result, key) => {
+          const cnt = result.length;
+          totalPage = Math.ceil(cnt / limit);
+          const beginIndex = (page - 1) * limit;
+          const endIndex = beginIndex + limit - 1;
           const options = {};
           options.order = [['id', 'DESC']];
-          options.where = { createdAt: { gte: formatedStartTime, lt: formatedEndTime }, user_id: key };
-          options.offset = BEGIN;
-          options.limit = SIZE;
+          options.where = { createdAt: { lt: moment(result[beginIndex]).add(1, 'month'), gte: result[endIndex] || '2000-01-01' }, user_id: key };
           return options;
       });
 
       go(
-          countOptions,
-          options => diaryModel.count(options),
+          null,
+          _ => diaryModel.findDataRangeResource(key),
           tableRange,
           f => f(key),
           options => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
