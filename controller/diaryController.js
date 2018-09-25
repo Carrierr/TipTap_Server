@@ -120,7 +120,7 @@ router.get('/detail', async (req, res) => {
       options,
       diaryModel.findAll,
       result => result.length > 0 ?
-      respondJson(res, resultCode.success, { data: { list : result } })
+      respondJson(res, resultCode.success, { list : result })
       : respondJson(res, resultCode.error, { desc: 'not found diary matches date' })
     );
   } catch (error) {
@@ -326,6 +326,44 @@ router.post('/delete', async (req, res) => {
           f => f(id),
           _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
           _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
+      );
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
+});
+
+router.post('/delete/day', async (req, res) => {
+    try {
+      const { key } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+      const { date } = req.body;
+      const options = {
+          where: {
+              createdAt: { gte: moment(date).format('YYYY-MM-DD'), lt: moment(date).add(1, 'days').format('YYYY-MM-DD') },
+              user_id: key
+          }
+      };
+
+      go(
+        moment().format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'),
+        result => result ? go(
+          req.headers['tiptap-token'],
+          getValue,
+          obj => {
+            delete obj.diaryToStampMapper;
+            delete obj.stamp;
+            delete obj.todayIndex;
+            return obj;
+          },
+          resetObj => setValue(req.headers['tiptap-token'], resetObj)
+        ) : undefined,
+        _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
       );
     } catch (error) {
       respondOnError(res, resultCode.error, error.message);
