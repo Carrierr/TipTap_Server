@@ -261,6 +261,14 @@ router.get('/today', async (req, res) => {
 
 router.post('/update', async (req, res) => {
     try {
+      const { key } = await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+
       const fileName = req.files ? req.files.diaryFile.name : false;
       const { content, location, latitude, longitude, id } = req.body;
       const options = {
@@ -274,14 +282,6 @@ router.post('/update', async (req, res) => {
               id: id
           }
       };
-
-      const { key } = await go(
-        req.headers['tiptap-token'],
-        getValue,
-        obj => obj
-        ? obj
-        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
-      );
 
       options.where.user_id = key;
 
