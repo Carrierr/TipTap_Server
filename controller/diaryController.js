@@ -389,24 +389,29 @@ function monthlyConvert (arg) {
                 !result ? acc.push({
                       year: moment(obj.createdAt).format('YYYY'),
                       month: moment(obj.createdAt).format('MM'),
-                      datas: Object.assign(((obj) => {
-                          const dayObj = {};
-                          dayObj[moment(obj.createdAt).format('DD')] = {
-                            lastDiary: obj
+                      datas: Array(Object.assign(((obj) => {
+                          const dayObj = {
+                            day: moment(obj.createdAt).format('DD'),
+                            diaryDatas: {
+                              lastDiary: obj
+                            }
                           };
                           return dayObj;
-                      })(obj), {})
+                      })(obj), {}))
                   })
                 : (() => {
                   const idx = acc.findIndex(item => item.year === result.year && item.month === result.month);
-                  acc[idx].datas[moment(obj.createdAt).format('DD')] ?
-                  acc[idx].datas[moment(obj.createdAt).format('DD')].firstDiary = obj
+                  const dayIndex = acc[idx].datas.findIndex(item => item.day === moment(obj.createdAt).format('DD'));
+                  dayIndex > -1 ?
+                  acc[idx].datas[dayIndex].diaryDatas.firstDiary = obj
                   : ((obj) => {
-                    const dayObj = {};
-                    dayObj[moment(obj.createdAt).format('DD')] = {
-                      lastDiary: obj
+                    const dayObj = {
+                      day: moment(obj.createdAt).format('DD'),
+                      diaryDatas: {
+                        lastDiary: obj
+                      }
                     };
-                    acc[idx].datas = Object.assign(dayObj, acc[idx].datas);
+                    acc[idx].datas.push(dayObj);
                   })(obj)
                 })();
                 return acc;
@@ -416,13 +421,15 @@ function monthlyConvert (arg) {
             acc.push({
                 year: moment(obj.createdAt).format('YYYY'),
                 month: moment(obj.createdAt).format('MM'),
-                datas: Object.assign(((obj) => {
-                    const dayObj = {};
-                    dayObj[moment(obj.createdAt).format('DD')] = {
-                      lastDiary: obj
+                datas: Array(Object.assign(((obj) => {
+                    const dayObj = {
+                      day: moment(obj.createdAt).format('DD'),
+                      diaryDatas: {
+                        lastDiary: obj
+                      }
                     };
                     return dayObj;
-                })(obj), {})
+                })(obj), {}))
             });
             return acc;
         })();
