@@ -23,7 +23,8 @@ module.exports = {
         shareFlag: 1,
         registrationKey: 'registration_key', // 푸시 사용자 토큰
         deviceType: 'android' // android or ios 소문자
-      }
+      },
+      '/account/readed/diary/reset': {}
     },
     diaryRq: {
       '/diary/list': {},

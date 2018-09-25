@@ -6,7 +6,7 @@ const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
 const { diaryModel } = require('../model');
-const { getValue } = require('../modules/redisModule');
+const { getValue, setValue } = require('../modules/redisModule');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl } = require('../utils/common');
 const { accountRq } = require('../utils/requestForm');
@@ -65,6 +65,33 @@ router.post('/update', (req, res) => {
         : pushModel.create(data).catch(e => respondOnError(res, resultCode.error, e.message)),
         _ => respondJson(res, resultCode.success, { desc: 'completed update' })
     );
+});
+
+router.post('/readed/diary/reset', async (req, res) => {
+    try {
+      await go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => obj
+        ? obj
+        : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+      );
+
+      go(
+        req.headers['tiptap-token'],
+        getValue,
+        obj => {
+          delete obj.readed;
+          return obj;
+        },
+        resetObj => setValue(req.headers['tiptap-token'], resetObj),
+        result => result ?
+        respondJson(res, resultCode.success, { data: 'success reset' })
+        : respondJson(res, resultCode.error, { desc: result })
+      )
+    } catch (error) {
+      respondOnError(res, resultCode.error, error.message);
+    }
 });
 
 module.exports = router;
