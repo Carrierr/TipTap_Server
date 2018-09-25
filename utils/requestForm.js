@@ -46,6 +46,9 @@ module.exports = {
       },
       '/diary/delete': {
         id: '1'
+      },
+      '/diary/delete/day': {
+        date: '2018-09-26'
       }
     },
     fileRq: {
