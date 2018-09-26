@@ -217,7 +217,7 @@ router.get('/random', async (req, res) => {
                   _ => data
               );
           },
-          result => respondJson(res, resultCode.success, { data: result })
+          result => respondJson(res, resultCode.success, { list: result })
       );
     } catch (error) {
       respondOnError(res, resultCode.error, error.message);
