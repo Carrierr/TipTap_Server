@@ -87,26 +87,37 @@ const RedisModule = (function () {
       }
     ),
     deleteStampAndMapper: curry(function (key, target) {
-      log(target);
-      return go(
-        key,
-        RedisModule.getValue,
-        obj => {
-          target instanceof Array
-          ? (() => {
-            each(targetItem => {
-              obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[targetItem]), 1);
-              delete obj.diaryToStampMapper[targetItem];
-            }, target)
-          })()
-          : (() => {
-            obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[target]), 1);
-            delete obj.diaryToStampMapper[target];
-          })();
-          return obj;
-        },
-        result => RedisModule.setValue(key, result)
-      );
+      try {
+        return go(
+          key,
+          RedisModule.getValue,
+          obj => {
+            target instanceof Array
+            ? (() => {
+              each(targetItem => {
+                if (!obj.stamp && !obj.diaryToStampMapper) {
+                  obj = false;
+                  return;
+                }
+                obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[targetItem]), 1);
+                delete obj.diaryToStampMapper[targetItem];
+              }, target)
+            })()
+            : (() => {
+              if (!obj.stamp && !obj.diaryToStampMapper) {
+                obj = false;
+                return;
+              }
+              obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[target]), 1);
+              delete obj.diaryToStampMapper[target];
+            })();
+            return obj;
+          },
+          result => !result ? 'invalid token' : RedisModule.setValue(key, result)
+        );
+      } catch (error) {
+        throw error;
+      }
     }),
     stream: redis.scanStream({ count: 10 })
   }

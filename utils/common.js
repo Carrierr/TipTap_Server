@@ -17,7 +17,10 @@ const Common = (function (){
     'stamp7',
     'stamp8',
     'stamp9',
-    'stamp10'
+    'stamp10',
+    'stamp11',
+    'stamp12',
+    'stamp13'
   ];
 
   return {

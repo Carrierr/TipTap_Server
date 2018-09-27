@@ -51,6 +51,13 @@ const diaryModel = (function () {
         queryString => query(queryString),
         rows => map(row => row.date, rows)
       )
+    },
+    deleteArray: function (arr, key) {
+      return go(
+        arr,
+        dates => map(date =>`delete from diaries where user_id = ${key} and ${date}`, dates),
+        queryArr => map(queryString => query(queryString), queryArr)
+      )
     }
   }
 })();

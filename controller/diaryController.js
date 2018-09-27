@@ -324,7 +324,13 @@ router.post('/delete', async (req, res) => {
           req.headers['tiptap-token'],
           deleteStampAndMapper,
           f => f(id),
-          _ => diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+          r => {
+            log(r);
+            return r;
+          },
+          result => result === 'invalid token' ?
+          respondOnError(res, resultCode.error, { desc: result })
+          : diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
           _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
       );
     } catch (error) {
@@ -341,15 +347,42 @@ router.post('/delete/day', async (req, res) => {
         ? obj
         : respondOnError(res, resultCode.error, { desc: 'unknown token' })
       );
-      const { date } = req.body;
+      let { date } = req.body;
       const options = {
           where: {
-              createdAt: { gte: moment(date).format('YYYY-MM-DD'), lt: moment(date).add(1, 'days').format('YYYY-MM-DD') },
               user_id: key
           }
       };
 
+      date instanceof Array ? (() => {
+          options.where.createdAt = map(val => `createdAt >= '${moment(val).format('YYYY-MM-DD')}' and createdAt < '${moment(val).add(1, 'days').format('YYYY-MM-DD')}'`, date)
+      })() : (() => {
+          options.where.createdAt = { gte: moment(date).format('YYYY-MM-DD'), lt: moment(date).add(1, 'days').format('YYYY-MM-DD') };
+          date = moment(date).format('YYYY-MM-DD');
+      })();
+
+      date instanceof Array ?
       go(
+        options.where.createdAt,
+        arr => diaryModel.deleteArray(arr, key),
+        result => result ? go(
+              date,
+              dates => find(date => moment(date).format('YYYY-MM-DD') === moment().format('YYYY-MM-DD'), dates),
+              result => result ? go(
+                req.headers['tiptap-token'],
+                getValue,
+                obj => {
+                  delete obj.diaryToStampMapper;
+                  delete obj.stamp;
+                  delete obj.todayIndex;
+                  return obj;
+                },
+                resetObj => setValue(req.headers['tiptap-token'], resetObj)
+              ) : undefined
+            ) : respondOnError(res, resultCode.error, { desc: result }),
+        _ => respondJson(res, resultCode.success, { desc: 'completed delete diary' })
+      )
+      : go(
         moment().format('YYYY-MM-DD') === moment(date).format('YYYY-MM-DD'),
         result => result ? go(
           req.headers['tiptap-token'],
