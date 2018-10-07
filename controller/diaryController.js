@@ -451,6 +451,7 @@ function monthlyConvert (arg) {
                       datas: Array(Object.assign(((obj) => {
                           const dayObj = {
                             day: moment(obj.createdAt).format('DD'),
+                            dataCount: 1,
                             diaryDatas: {
                               lastDiary: obj
                             }
@@ -461,11 +462,15 @@ function monthlyConvert (arg) {
                 : (() => {
                   const idx = acc.findIndex(item => item.year === result.year && item.month === result.month);
                   const dayIndex = acc[idx].datas.findIndex(item => item.day === moment(obj.createdAt).format('DD'));
-                  dayIndex > -1 ?
-                  acc[idx].datas[dayIndex].diaryDatas.firstDiary = obj
+                  dayIndex > -1 ? (() => {
+                      acc[idx].datas[dayIndex].diaryDatas.firstDiary = obj;
+                      acc[idx].datas[dayIndex].dataCount = acc[idx].datas[dayIndex].dataCount + 1;
+                      log(acc[idx].datas[dayIndex]);
+                  })()
                   : ((obj) => {
                     const dayObj = {
                       day: moment(obj.createdAt).format('DD'),
+                      dataCount: 1,
                       diaryDatas: {
                         lastDiary: obj
                       }
@@ -483,6 +488,7 @@ function monthlyConvert (arg) {
                 datas: Array(Object.assign(((obj) => {
                     const dayObj = {
                       day: moment(obj.createdAt).format('DD'),
+                      dataCount: 1,
                       diaryDatas: {
                         lastDiary: obj
                       }
