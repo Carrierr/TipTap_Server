@@ -170,6 +170,41 @@ router.get('/list', async (req, res) => {
     }
 });
 
+router.get('/list/by/date', async (req, res) => {
+  try {
+    const { key, stamp = [] } = await go(
+      req.headers['tiptap-token'],
+      getValue,
+      obj => obj
+      ? obj
+      : respondOnError(res, resultCode.error, { desc: 'unknown token' })
+    );
+
+    let { startDate = '2000-01-01', endDate = moment().add(1, 'days').format('YYYY-MM-DD') } = req.query;
+
+    const options = {
+      where : {
+        user_id: key,
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        }
+      }
+    };
+
+    go(
+        null,
+        _ => diaryModel.findAll(options).catch(e => respondOnError(res, resultCode.error, e.message)),
+        result => respondJson(res, resultCode.success, { list: go(
+          result,
+          monthlyConvert
+        ), stamp: stamp })
+    );
+  } catch (error) {
+    respondOnError(res, resultCode.error, error.message);
+  }
+});
+
 router.get('/random', async (req, res) => {
     try {
       let { key, readed = [] } = await go(
@@ -324,10 +359,6 @@ router.post('/delete', async (req, res) => {
           req.headers['tiptap-token'],
           deleteStampAndMapper,
           f => f(id),
-          r => {
-            log(r);
-            return r;
-          },
           result => result === 'invalid token' ?
           respondOnError(res, resultCode.error, { desc: result })
           : diaryModel.delete(options).catch(e => respondOnError(res, resultCode.error, e.message)),
@@ -465,7 +496,6 @@ function monthlyConvert (arg) {
                   dayIndex > -1 ? (() => {
                       acc[idx].datas[dayIndex].diaryDatas.firstDiary = obj;
                       acc[idx].datas[dayIndex].dataCount = acc[idx].datas[dayIndex].dataCount + 1;
-                      log(acc[idx].datas[dayIndex]);
                   })()
                   : ((obj) => {
                     const dayObj = {

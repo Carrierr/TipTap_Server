@@ -27,6 +27,7 @@ module.exports = {
       '/account/readed/diary/reset': {}
     },
     diaryRq: {
+      '/diary/list/by/date': {},
       '/diary/list': {},
       '/diary/random': {},
       '/diary/today': {},
