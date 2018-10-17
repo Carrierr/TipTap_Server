@@ -26,6 +26,9 @@ const diaryModel = (function () {
         options.order = [['id', 'DESC']];
         return await diary.findAll(options);
     },
+    find: async function(options) {
+        return await diary.findAll(options);
+    },
     findToday: async function(options) {
         options.order = [['id', 'DESC']];
         options.where.createdAt = {
