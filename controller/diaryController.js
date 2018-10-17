@@ -52,6 +52,10 @@ router.post('/write', async (req, res) => {
         : respondOnError(res, resultCode.error, { desc: 'unknown token' })
       );
 
+      if (todayIndex > 9) {
+        return respondOnError(res, resultCode.error, { desc: `can't write greater than 10 diary for today` });
+      }
+
       data.user_id = key;
       data.todayIndex = todayIndex + 1;
 
@@ -187,7 +191,7 @@ router.get('/list/by/date', async (req, res) => {
         user_id: key,
         createdAt: {
           gte: startDate,
-          lt: endDate
+          lt: moment(endDate).add(1, 'days').format('YYYY-MM-DD')
         }
       }
     };
@@ -214,7 +218,7 @@ router.get('/random', async (req, res) => {
         ? obj
         : respondOnError(res, resultCode.error, { desc: 'unknown token' })
       );
-
+      
       const options = {
         where: {
           id: { notIn: readed },
@@ -228,7 +232,7 @@ router.get('/random', async (req, res) => {
           options,
           diaryModel.getRandomDiaryOne,
           result => {
-            if (result.length === 0) respondOnError(res, resultCode.error, 'no more data');
+            if (result.length === 0) { return respondOnError(res, resultCode.error, 'no more data') };
             const { user_id, createdAt } = result[0].dataValues;
             const options = {
                 where: {
@@ -239,17 +243,23 @@ router.get('/random', async (req, res) => {
                             `${moment(createdAt).add(1, 'days').format('YYYY-MM-DD')} 00:00:00`
                         ]
                     }
-                }
+                },
+                limit: 10
             };
             return options;
           },
-          diaryModel.findAll,
+          diaryModel.find,
           data => {
               return go(
                   null,
                   _ => updateValue(req.headers['tiptap-token'], { key: 'readed' ,value: readed.concat(map(ele => ele.dataValues.id, data)) })
-                  .catch(error => respondOnError(res, resultCode.error, error.message)),
-                  _ => data
+                  .catch(error => { throw error }),
+                  _ => data,
+                  result => go(
+                    result,
+                    data => map(item => item.dataValues, data),
+                    arr => arr.reverse()
+                  )
               );
           },
           result => respondJson(res, resultCode.success, { list: result })
@@ -308,6 +318,9 @@ router.post('/update', async (req, res) => {
 
       options.where.user_id = key;
 
+      log(fileName);
+      log(options);
+
       fileName
       ? go(
           id,
@@ -330,6 +343,7 @@ router.post('/update', async (req, res) => {
           _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
       )
       : go(
+          null,
           _ => diaryModel.update(options).catch(e => respondOnError(res, resultCode.error, e.message)),
           _ => respondJson(res, resultCode.success, { desc: 'completed update diary' })
       );
