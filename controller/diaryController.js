@@ -211,18 +211,20 @@ router.get('/list/by/date', async (req, res) => {
 
 router.get('/random', async (req, res) => {
     try {
-      let { key, readed = [] } = await go(
+      let { key, readed = [], block = [] } = await go(
         req.headers['tiptap-token'],
         getValue,
         obj => obj
         ? obj
         : respondOnError(res, resultCode.error, { desc: 'unknown token' })
       );
-      
+
+      block.push(key);
+
       const options = {
         where: {
           id: { notIn: readed },
-          user_id: { not: key },
+          user_id: { notIn: block },
           shared: 1
         },
         limit: 1
@@ -269,6 +271,36 @@ router.get('/random', async (req, res) => {
     }
 });
 
+router.post('/block', async (req, res) => {
+    try {
+      const { key, block = [] } = await go(
+        req.headers['tiptap-token'],
+        getValue
+      );
+
+      if (!key) throw 0;
+
+      const { user_id } = req.body;
+      block.push(user_id);
+
+      go(
+        block,
+        block => updateValue(req.headers['tiptap-token'], { key: 'block' ,value: block }),
+        result => result
+        ? respondJson(res, resultCode.success, { desc: 'completed block user' })
+        : respondOnError(res, resultCode.error, { desc: 'block fail' })
+      );
+    } catch (error) {
+      return go(
+        error.message,
+        msg => msg === `Cannot destructure property \`key\` of 'undefined' or 'null'.`
+        ? 'Unknown Token Error'
+        : msg,
+        resultMsg => respondOnError(res, resultCode.error, resultMsg)
+      );
+    }
+});
+
 router.get('/today', async (req, res) => {
     try {
       const options = {};
@@ -312,14 +344,10 @@ router.post('/update', async (req, res) => {
               longitude: longitude
           },
           where: {
-              id: id
+              id: id,
+              user_id : key
           }
       };
-
-      options.where.user_id = key;
-
-      log(fileName);
-      log(options);
 
       fileName
       ? go(
