@@ -1,15 +1,5 @@
 module.exports = {
     authRq: {
-      '/auth/token/create': {
-        type: 'kakao',
-        account: 'llgs901@naver.com',
-        name: '이기섭'
-      },
-      '/auth/sign/in': {
-        type: 'kakao',
-        account: 'llgs901@naver.com',
-        name: '이기섭'
-      },
       '/auth/login': {
         type: 'kakao',
         account: 'llgs901@naver.com',
@@ -32,6 +22,9 @@ module.exports = {
       '/diary/random': {},
       '/diary/today': {},
       '/diary/detail': {},
+      '/diary/block': {
+        user_id: 1
+      },
       '/diary/write': {
         	content: "tiptap diary content",
         	location: "서울시 금천구 가산동 533-22",
