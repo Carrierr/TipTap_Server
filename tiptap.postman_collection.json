@@ -15,7 +15,8 @@
 		"13bf8399-db46-dd84-3ba9-cdb3645f6dc8",
 		"853571d1-3e7a-fc6e-ab53-0c494402a03a",
 		"7ef11464-0ded-98c5-eb59-ce02eeed786d",
-		"f8be0980-af74-af80-9243-bdc91c580533"
+		"f8be0980-af74-af80-9243-bdc91c580533",
+		"24874e23-8034-2c06-7d1b-544f89e749d8"
 	],
 	"folders": [],
 	"folders_order": [],
@@ -30,11 +31,12 @@
 				{
 					"key": "tiptap-token",
 					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"enabled": true,
-					"description": ""
+					"description": "",
+					"enabled": true
 				}
 			],
 			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?page=1&limit=2",
+			"folder": null,
 			"queryParams": [
 				{
 					"key": "page",
@@ -51,51 +53,32 @@
 					"enabled": true
 				}
 			],
+			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
 			"method": "GET",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
 			"data": null,
 			"dataMode": "params",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1537902453624,
 			"name": "7. get diaries with pagination",
 			"description": "page : 현재 불러올 페이지\nlimit : 페이징당 가져올 데이터 수",
-			"descriptionFormat": "html",
-			"time": 1535134678249,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996",
-			"isFromCollection": true,
-			"collectionRequestId": "104e8247-d3bb-7688-7852-f969c8f80f8d",
-			"folder": null,
-			"auth": null,
-			"events": null,
-			"rawModeData": null,
-			"variables": null
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
 		},
 		{
-			"folder": null,
 			"id": "13bf8399-db46-dd84-3ba9-cdb3645f6dc8",
-			"name": "9. get diary detail",
-			"dataMode": "params",
-			"data": null,
-			"auth": null,
-			"events": null,
-			"rawModeData": null,
-			"descriptionFormat": "html",
-			"description": null,
-			"variables": null,
 			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
-			"method": "GET",
-			"pathVariables": {},
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				}
+			],
 			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/detail?date=2018-08-24",
-			"preRequestScript": null,
-			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
 			"queryParams": [
 				{
 					"key": "date",
@@ -105,30 +88,6 @@
 					"enabled": true
 				}
 			],
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariableData": [],
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"id": "24c044ba-fb5f-61ba-3fb0-0dd19b5d975b",
-			"headers": "tiptap-token: 25741b7b-8058-4218-9ee6-7ace1f793082\n",
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "25741b7b-8058-4218-9ee6-7ace1f793082",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/today",
-			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
@@ -138,17 +97,22 @@
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1534590741956,
-			"name": "4. get today diaries",
-			"description": "get today diaries",
+			"time": 1537810448931,
+			"name": "9. get diary detail",
+			"description": "",
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"responses": [],
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
+			"responses": []
 		},
 		{
-			"id": "2d697dc6-2b31-7109-4e6d-98fbdd7d6369",
-			"headers": "Content-Type: application/json\n",
+			"id": "24874e23-8034-2c06-7d1b-544f89e749d8",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\nContent-Type: application/json\n",
 			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				},
 				{
 					"key": "Content-Type",
 					"value": "application/json",
@@ -156,43 +120,93 @@
 					"enabled": true
 				}
 			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
-			"folder": null,
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/block",
 			"queryParams": [],
-			"preRequestScript": null,
 			"pathVariables": {},
 			"pathVariableData": [],
+			"preRequestScript": null,
 			"method": "POST",
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
 			"data": [],
 			"dataMode": "raw",
+			"name": "13. block user",
+			"description": "해당 사용자의 일기를 앞으로도 보기를 원치 않을 때 사용\n",
+			"descriptionFormat": "html",
+			"time": 1541068198180,
 			"version": 2,
+			"responses": [],
 			"tests": null,
 			"currentHelper": "normal",
 			"helperAttributes": {},
-			"time": 1534602389863,
-			"name": "5. login",
-			"description": "sign up + sign in 통합\n첫 로그인 시 회원 가입\n차후 로그인 시 동일한 정보가 들어오면\n기존 토큰 반환",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"responses": [],
-			"rawModeData": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"dororo\"\n}",
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
+			"rawModeData": "{\n\t\"user_id\": 35\n}"
 		},
 		{
-			"id": "3cbb2bcb-21d1-0cb1-6e4e-c4d5e66273d8",
-			"headers": "tiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"folder": null,
+			"id": "24c044ba-fb5f-61ba-3fb0-0dd19b5d975b",
+			"name": "4. get today diaries",
+			"dataMode": "params",
+			"data": null,
+			"auth": null,
+			"events": null,
+			"rawModeData": null,
+			"descriptionFormat": null,
+			"description": "get today diaries",
+			"variables": null,
+			"headers": "tiptap-token: 25741b7b-8058-4218-9ee6-7ace1f793082\n",
+			"method": "GET",
+			"pathVariables": {},
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/today",
+			"preRequestScript": null,
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"queryParams": [],
 			"headerData": [
 				{
 					"key": "tiptap-token",
-					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"value": "25741b7b-8058-4218-9ee6-7ace1f793082",
 					"enabled": true
 				}
 			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/update",
-			"queryParams": [],
-			"pathVariables": {},
 			"pathVariableData": [],
-			"preRequestScript": null,
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
+		},
+		{
+			"folder": null,
+			"id": "2d697dc6-2b31-7109-4e6d-98fbdd7d6369",
+			"name": "5. login",
+			"dataMode": "raw",
+			"data": [],
+			"auth": null,
+			"events": null,
+			"descriptionFormat": null,
+			"description": "sign up + sign in 통합\n첫 로그인 시 회원 가입\n차후 로그인 시 동일한 정보가 들어오면\n기존 토큰 반환",
+			"variables": null,
+			"headers": "Content-Type: application/json\n",
 			"method": "POST",
+			"pathVariables": {},
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
+			"preRequestScript": null,
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"enabled": true
+				}
+			],
+			"pathVariableData": [],
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
+			"rawModeData": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"dororo\"\n}"
+		},
+		{
+			"id": "3cbb2bcb-21d1-0cb1-6e4e-c4d5e66273d8",
+			"folder": null,
+			"name": "3. update diary",
+			"dataMode": "params",
 			"data": [
 				{
 					"key": "content",
@@ -231,80 +245,22 @@
 				},
 				{
 					"key": "diaryFile",
+					"value": "",
 					"description": "",
 					"type": "file",
 					"enabled": true
 				}
 			],
-			"dataMode": "params",
-			"name": "3. update diary",
+			"auth": null,
+			"events": null,
+			"rawModeData": null,
+			"descriptionFormat": "html",
 			"description": "일기 수정\nid : diary/list 에서 반환되는 id\n나머지 파라메터는 write와 동일",
-			"descriptionFormat": "html",
-			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"folder": null,
-			"auth": null,
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"events": null,
-			"rawModeData": null,
 			"variables": null,
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"id": "71b27e86-72e5-6381-bd70-e01e65997bf5",
-			"headers": "tiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-					"enabled": true
-				}
-			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "GET",
-			"data": [
-				{
-					"key": "",
-					"value": "",
-					"type": "file",
-					"enabled": true
-				}
-			],
-			"dataMode": "params",
-			"name": "1. get diaries",
-			"description": "일기 데이터 조회",
-			"descriptionFormat": "html",
-			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"folder": null,
-			"auth": null,
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"events": null,
-			"rawModeData": null,
-			"variables": null,
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"folder": null,
-			"id": "7ef11464-0ded-98c5-eb59-ce02eeed786d",
-			"name": "11. delete diary by day",
-			"dataMode": "raw",
-			"data": [],
-			"auth": null,
-			"events": null,
-			"descriptionFormat": "html",
-			"description": null,
-			"variables": null,
-			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\nContent-Type: application/json\n",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
 			"method": "POST",
 			"pathVariables": {},
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete/day",
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/update",
 			"preRequestScript": null,
 			"tests": null,
 			"currentHelper": null,
@@ -314,34 +270,215 @@
 				{
 					"key": "tiptap-token",
 					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"enabled": true
-				},
-				{
-					"key": "Content-Type",
-					"value": "application/json",
+					"description": "",
 					"enabled": true
 				}
 			],
 			"pathVariableData": [],
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"rawModeData": "{\n  \"date\": \"2018-09-26\"\n}"
+			"isFromCollection": true,
+			"collectionRequestId": "3cbb2bcb-21d1-0cb1-6e4e-c4d5e66273d8"
 		},
 		{
 			"folder": null,
+			"id": "71b27e86-72e5-6381-bd70-e01e65997bf5",
+			"name": "1. get diaries",
+			"dataMode": "params",
+			"data": [
+				{
+					"key": "",
+					"value": "",
+					"type": "file",
+					"enabled": true
+				}
+			],
+			"auth": null,
+			"events": null,
+			"rawModeData": null,
+			"descriptionFormat": "html",
+			"description": "일기 데이터 조회",
+			"variables": null,
+			"headers": "tiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"method": "GET",
+			"pathVariables": {},
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
+			"preRequestScript": null,
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"queryParams": [],
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"enabled": true
+				}
+			],
+			"pathVariableData": [],
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
+		},
+		{
+			"id": "7ef11464-0ded-98c5-eb59-ce02eeed786d",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\nContent-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete/day",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
+			"data": [],
+			"dataMode": "raw",
+			"name": "11. delete diary by day",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1537903837873,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n\t\"date\": \"2018-09-26\"\n}"
+		},
+		{
 			"id": "853571d1-3e7a-fc6e-ab53-0c494402a03a",
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/readed/diary/reset",
+			"queryParams": [],
+			"pathVariables": {},
+			"pathVariableData": [],
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
+			"data": null,
+			"dataMode": "params",
 			"name": "10. reset readed diary",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1537890295632,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {}
+		},
+		{
+			"id": "860efdb3-599f-0745-5874-bd542f636237",
+			"headers": "Content-Type: application/json\ntiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "tiptap-token",
+					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete",
+			"folder": null,
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1537602337622,
+			"name": "2. delete diary",
+			"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값",
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
+			"rawModeData": "{\n  \"id\": [100, 101, 102]\n}"
+		},
+		{
+			"folder": null,
+			"id": "918dc923-7ca2-cce1-d789-73443127007e",
+			"name": "6. get diaries of date range",
 			"dataMode": "params",
 			"data": null,
 			"auth": null,
 			"events": null,
 			"rawModeData": null,
 			"descriptionFormat": "html",
-			"description": null,
+			"description": "startDate : 시작날짜\nendDate : 종료날짜\n미지정 시 가장 최근 순으로 가져옴",
 			"variables": null,
 			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
-			"method": "POST",
+			"method": "GET",
 			"pathVariables": {},
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/readed/diary/reset",
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?startDate=2018-08-24&endDate=2018-08-25",
+			"preRequestScript": null,
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
+			"queryParams": [
+				{
+					"key": "startDate",
+					"value": "2018-08-24",
+					"equals": true,
+					"enabled": true
+				},
+				{
+					"key": "endDate",
+					"value": "2018-08-25",
+					"equals": true,
+					"enabled": true
+				}
+			],
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"enabled": true
+				}
+			],
+			"pathVariableData": [],
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
+		},
+		{
+			"folder": null,
+			"id": "939707de-f0b4-f18b-fa75-e825d412459a",
+			"name": "8. get someone's diary",
+			"dataMode": "params",
+			"data": null,
+			"auth": null,
+			"events": null,
+			"rawModeData": null,
+			"descriptionFormat": "html",
+			"description": "1일 1회 다른 사람이 특정 일자에 작성한\n일기를 가져오는 api\n1일 1회 호출 수 제한을 두지는 않았으니 클라이언트에서 잘 호출해주시길 바랍니다.",
+			"variables": null,
+			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
+			"method": "GET",
+			"pathVariables": {},
+			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/random",
 			"preRequestScript": null,
 			"tests": null,
 			"currentHelper": null,
@@ -356,121 +493,6 @@
 			],
 			"pathVariableData": [],
 			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"id": "860efdb3-599f-0745-5874-bd542f636237",
-			"headers": "Content-Type: application/json\ntiptap-token: 919ab983-13b3-481d-a98a-19f225e0a4c7\n",
-			"headerData": [
-				{
-					"key": "Content-Type",
-					"value": "application/json",
-					"enabled": true,
-					"description": ""
-				},
-				{
-					"key": "tiptap-token",
-					"value": "919ab983-13b3-481d-a98a-19f225e0a4c7",
-					"enabled": true,
-					"description": ""
-				}
-			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "POST",
-			"data": [],
-			"dataMode": "raw",
-			"name": "2. delete diary",
-			"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값",
-			"descriptionFormat": "html",
-			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"folder": null,
-			"auth": null,
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"events": null,
-			"variables": null,
-			"rawModeData": "{\n  \"id\": [100, 101, 102]\n}",
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"id": "918dc923-7ca2-cce1-d789-73443127007e",
-			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list?startDate=2018-08-24&endDate=2018-08-25",
-			"queryParams": [
-				{
-					"key": "startDate",
-					"value": "2018-08-24",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "endDate",
-					"value": "2018-08-25",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"data": null,
-			"dataMode": "params",
-			"name": "6. get diaries of date range",
-			"description": "startDate : 시작날짜\nendDate : 종료날짜\n미지정 시 가장 최근 순으로 가져옴",
-			"descriptionFormat": "html",
-			"time": 1535134545524,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996"
-		},
-		{
-			"id": "939707de-f0b4-f18b-fa75-e825d412459a",
-			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/random",
-			"queryParams": [],
-			"pathVariables": {},
-			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"data": null,
-			"dataMode": "params",
-			"name": "8. get someone's diary",
-			"description": "1일 1회 다른 사람이 특정 일자에 작성한\n일기를 가져오는 api\n1일 1회 호출 수 제한을 두지는 않았으니 클라이언트에서 잘 호출해주시길 바랍니다.",
-			"descriptionFormat": "html",
-			"time": 1537160392854,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
 		},
 		{
 			"id": "dee71f17-d3dc-7708-a3aa-b1f98ebb1172",
@@ -524,64 +546,56 @@
 			],
 			"dataMode": "params",
 			"tests": null,
-			"currentHelper": null,
-			"helperAttributes": null,
-			"time": 1534590751524,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1537860543298,
 			"name": "0. write diary",
 			"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"responses": [],
-			"collection_id": "4becd867-c929-65f8-e062-16236374c996",
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
+		},
+		{
+			"folder": null,
+			"id": "f8be0980-af74-af80-9243-bdc91c580533",
+			"name": "12. get diaries by date",
+			"dataMode": "params",
+			"data": null,
 			"auth": null,
 			"events": null,
 			"rawModeData": null,
-			"descriptionFormat": null,
-			"variables": null
-		},
-		{
-			"id": "f8be0980-af74-af80-9243-bdc91c580533",
+			"descriptionFormat": "html",
+			"description": null,
+			"variables": null,
 			"headers": "tiptap-token: 5ddfcb4c-aff0-441b-9a88-e7dbecb43170\n",
-			"headerData": [
-				{
-					"key": "tiptap-token",
-					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
-					"description": "",
-					"enabled": true
-				}
-			],
+			"method": "GET",
+			"pathVariables": {},
 			"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list/by/date?startDate=2018-08-15&endDate=2018-09-30",
+			"preRequestScript": null,
+			"tests": null,
+			"currentHelper": null,
+			"helperAttributes": null,
 			"queryParams": [
 				{
 					"key": "startDate",
 					"value": "2018-08-15",
 					"equals": true,
-					"description": "",
 					"enabled": true
 				},
 				{
 					"key": "endDate",
 					"value": "2018-09-30",
 					"equals": true,
-					"description": "",
 					"enabled": true
 				}
 			],
-			"pathVariables": {},
+			"headerData": [
+				{
+					"key": "tiptap-token",
+					"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170",
+					"enabled": true
+				}
+			],
 			"pathVariableData": [],
-			"preRequestScript": null,
-			"method": "GET",
-			"collectionId": "4becd867-c929-65f8-e062-16236374c996",
-			"data": null,
-			"dataMode": "params",
-			"name": "12. get diaries by date",
-			"description": "",
-			"descriptionFormat": "html",
-			"time": 1539137372473,
-			"version": 2,
-			"responses": [],
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {}
+			"collectionId": "4becd867-c929-65f8-e062-16236374c996"
 		}
 	]
 }
