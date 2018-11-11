@@ -23,14 +23,15 @@ const diaryModel = (function () {
         return await diary.findOne(options);
     },
     findAll: async function(options) {
-        options.order = [['id', 'DESC']];
+        options.order = [['createdAt', 'DESC']];
+        // options.order = [['id', 'DESC']]; production 배포 시에는 이걸로 변경
         return await diary.findAll(options);
     },
     find: async function(options) {
         return await diary.findAll(options);
     },
     findToday: async function(options) {
-        options.order = [['id', 'DESC']];
+        options.order = [['id', 'ASC']];
         options.where.createdAt = {
           $gte: moment().format('YYYY-MM-DD')
         }
