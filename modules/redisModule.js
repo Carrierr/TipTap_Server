@@ -41,6 +41,8 @@ const RedisModule = (function () {
     setFirstAuth: async (key, value) => {
       const auth = {
         auth: true,
+        status: true,
+        shareFlag: true,
         key: value
       }
       return await redis.set(key, JSON.stringify(auth)).then(_ => key).catch(e => e.message);

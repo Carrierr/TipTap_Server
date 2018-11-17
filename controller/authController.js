@@ -38,23 +38,32 @@ router.post('/login', async (req, res) => {
     authType: type,
     thirdPartyAccount: account
   };
+  let existed = false;
 
   try {
     const token = await go(
         data,
         options => userModel.findOne({ where: options }),
         result => !!result
-        ? respondJson(res, resultCode.success, { token: result.token })
+        ? ((existedToken) => {
+          existed = true;
+          return existedToken;
+        })(result.token)
         : uuidv4()
     );
+
+    if (existed) {
+      return respondJson(res, resultCode.success, { token: token, existed: true });
+    }
 
     data.token = token;
 
     go(
       data,
       userModel.create,
+      logf,
       insertResult => setFirstAuth(insertResult.token, insertResult.id),
-      setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult })
+      setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult, existed: false })
     );
 
   } catch (error) {

@@ -47,5 +47,13 @@ module.exports = {
     },
     fileRq: {
       '/file/write': {}
+    },
+    blameRq: {
+        '/blame/report': {
+            content_id: 1,
+            type: '음란성',
+            user_id: 10,
+            target_user_id: 11
+        }
     }
 }

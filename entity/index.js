@@ -15,12 +15,13 @@ const user = sequelizeInstance.define('user', {
     authType: { type: sequelize.CHAR(10), allowNull: false }, // 서드파티 인증 타입 (ex. kakao, naver, facebook))
     thirdPartyAccount: { type: sequelize.STRING(100), allowNull: false }, // 서드파티 (ex. 카카오) 계정
     shareFlag: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 공유 가능 여부
+    status: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 계정 정지 여부
     star: { type: sequelize.SMALLINT.UNSIGNED, allowNull: true, defaultValue : 0 },
     follwing: { type: sequelize.SMALLINT.UNSIGNED, allowNull: true, defaultValue : 0 },
     follwed: { type: sequelize.SMALLINT.UNSIGNED, allowNull: true, defaultValue : 0 },
     notification: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 1. 푸시 알림 허용, 0. 푸시 알림 차단
     token: { type: sequelize.STRING(40), allowNull: true },
-    loginedAt: { type: sequelize.DATE, allowNull: true }
+    loginedAt: { type: sequelize.DATE, allowNull: true },
 },
 {
     charset: 'utf8',

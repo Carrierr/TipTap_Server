@@ -273,12 +273,12 @@ router.get('/random', async (req, res) => {
 
 router.post('/block', async (req, res) => {
     try {
-      const { key, block = [] } = await go(
+      const { key = false, block = [] } = await go(
         req.headers['tiptap-token'],
         getValue
       );
 
-      if (!key) throw 0;
+      if (!key) throw { message: 'Unknown Token Error' };
 
       const { user_id } = req.body;
       block.push(user_id);
@@ -291,13 +291,7 @@ router.post('/block', async (req, res) => {
         : respondOnError(res, resultCode.error, { desc: 'block fail' })
       );
     } catch (error) {
-      return go(
-        error.message,
-        msg => msg === `Cannot destructure property \`key\` of 'undefined' or 'null'.`
-        ? 'Unknown Token Error'
-        : msg,
-        resultMsg => respondOnError(res, resultCode.error, resultMsg)
-      );
+      return respondOnError(res, resultCode.error, error.message);
     }
 });
 
