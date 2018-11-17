@@ -427,6 +427,11 @@
 
   const unique = uniqueBy(identity);
 
+  const logf = (arg) => {
+      log(arg);
+      return arg;
+  }
+
   const Functional = {
     identity, noop, not, negate,
     isUndefined, hasIter, isArray, isString,
@@ -457,6 +462,7 @@
     first, last,
     nodeF,
     mix, merge, extend, defaults,
+    logf
   };
   Object.assign(global, Functional);
 } (typeof window != 'undefined' ? window : global);

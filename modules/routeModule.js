@@ -3,19 +3,26 @@ const util = require('util');
 const moment = require('moment');
 const csrfProtection = new csurf({ cookie: true });
 const config = require('../config');
-const { authCtrl, fileCtrl, diaryCtrl, accountCtrl } = require('../controller');
+const { authCtrl, fileCtrl, diaryCtrl, accountCtrl, blameCtrl } = require('../controller');
+const { respondOnError } = require('../utils/respond');
+const resultCode = require('../utils/resultCode');
+const { getValue } = require('./redisModule');
 
 const RoutesModule = (function (){
   return {
     Init: function () {
-      if (app.get('env') === 'production') {
-          app.use(csrfProtection);
-          console.log(util.format('[Logger]::[Route]::[Setup CSRF Protection]::[Access Time %s]',
-                                          moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
-                                  ));
-      }
+      app.disable('x-powered-by');
+      // app.use(csrfProtection); 차후 고려
+      app.use(async (req, res, next) => {
+          const status = await go(
+              req.headers['tiptap-token'],
+              getValue,
+              ({ status = true }) => status
+          );
 
-      app.use((req, res, next) => {
+          if (!status) {
+              return respondOnError(res, resultCode.error, { desc: 'Access Denine' });
+          };
 
           res.header('Access-Control-Allow-Origin', config.server.accept_domain);
           res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -27,6 +34,7 @@ const RoutesModule = (function (){
           next();
       });
 
+      app.use('/blame', blameCtrl);
       app.use('/auth', authCtrl);
       app.use('/diary', diaryCtrl);
       app.use('/account', accountCtrl);
