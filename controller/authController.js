@@ -61,7 +61,6 @@ router.post('/login', async (req, res) => {
     go(
       data,
       userModel.create,
-      logf,
       insertResult => setFirstAuth(insertResult.token, insertResult.id),
       setAuthResult => respondJson(res, resultCode.success, { token: setAuthResult, existed: false })
     );

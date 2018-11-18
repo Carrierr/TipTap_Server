@@ -7,6 +7,7 @@ const { authCtrl, fileCtrl, diaryCtrl, accountCtrl, blameCtrl } = require('../co
 const { respondOnError } = require('../utils/respond');
 const resultCode = require('../utils/resultCode');
 const { getValue } = require('./redisModule');
+const { getUrl } = require('../utils/common');
 
 const RoutesModule = (function (){
   return {
@@ -17,10 +18,11 @@ const RoutesModule = (function (){
           const status = await go(
               req.headers['tiptap-token'],
               getValue,
-              ({ status = true }) => status
+              result => !!result ? result.status : true,
+              // TODO 런칭 직전에 바꿔야 함 false로
           );
 
-          if (!status) {
+          if (!status && getUrl(req.originalUrl) !== '/auth/login') {
               return respondOnError(res, resultCode.error, { desc: 'Access Denine' });
           };
 
