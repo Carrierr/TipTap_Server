@@ -18,12 +18,12 @@ const RoutesModule = (function (){
           const status = await go(
               req.headers['tiptap-token'],
               getValue,
-              result => !!result ? result.status : true,
+              result => result.status === false ? result.status : true,
               // TODO 런칭 직전에 바꿔야 함 false로
           );
 
           if (!status && getUrl(req.originalUrl) !== '/auth/login') {
-              return respondOnError(res, resultCode.error, { desc: 'Access Denine' });
+              return respondOnError(res, resultCode.accessDenine, { desc: 'Access Denine' });
           };
 
           res.header('Access-Control-Allow-Origin', config.server.accept_domain);

@@ -210,6 +210,9 @@ router.get('/list/by/date', async (req, res) => {
 });
 
 router.get('/random', async (req, res) => {
+  /**
+   * @description TODO 런칭 전 로직 제대로 확인 한번 할 것!
+   */
     try {
       let { key, readed = [], block = [] } = await go(
         req.headers['tiptap-token'],
@@ -246,7 +249,7 @@ router.get('/random', async (req, res) => {
                         ]
                     }
                 },
-                limit: 10
+                limit: 10 // 런칭전 삭제?
             };
             return options;
           },
