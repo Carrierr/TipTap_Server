@@ -18,7 +18,10 @@ const RoutesModule = (function (){
           const status = await go(
               req.headers['tiptap-token'],
               getValue,
-              result => result.status === false ? result.status : true,
+              result => {
+                if (!result) return false;
+                else return result.status === false ? result.status : true;
+              },
               // TODO 런칭 직전에 바꿔야 함 false로
           );
 
