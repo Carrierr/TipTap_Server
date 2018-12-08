@@ -103,6 +103,7 @@ const RedisModule = (function () {
                 }
                 obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[targetItem]), 1);
                 delete obj.diaryToStampMapper[targetItem];
+                obj.todayIndex = obj.todayIndex - 1;
               }, target)
             })()
             : (() => {
@@ -112,6 +113,7 @@ const RedisModule = (function () {
               }
               obj.stamp.splice(obj.stamp.findIndex(item => item === obj.diaryToStampMapper[target]), 1);
               delete obj.diaryToStampMapper[target];
+              obj.todayIndex = obj.todayIndex - 1;
             })();
             return obj;
           },
