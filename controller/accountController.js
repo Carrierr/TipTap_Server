@@ -5,13 +5,16 @@ const _ = require('lodash');
 const router = express.Router();
 
 const { respondJson, respondOnError } = require('../utils/respond');
-const { diaryModel } = require('../model');
-const { getValue, setValue } = require('../modules/redisModule');
+const { pushModel, userModel } = require('../model');
+const { getValue, setValue, updateValue } = require('../modules/redisModule');
 const resultCode = require('../utils/resultCode');
 const { parameterFormCheck, getUrl } = require('../utils/common');
 const { accountRq } = require('../utils/requestForm');
 
 const controllerName = 'Account';
+function throwError (error) {
+    return respondOnError(res, resultCode.error, error.message);
+};
 
 router.use((req, res, next) => {
 
@@ -28,6 +31,70 @@ router.use((req, res, next) => {
       ? next()
       : respondOnError(res, resultCode.incorrectParamForm, {desc: "incorrect parameter form"})
     );
+});
+
+router.post('/share/on', async (req, res) => {
+    try {
+        const { key = false } = await go(
+          req.headers['tiptap-token'],
+          getValue
+        );
+
+        if (!key) throw { message: 'Unknown Token Error' };
+
+        const options = {
+            data: {
+                shareFlag: true
+            },
+            where: {
+                id: key
+            }
+        };
+  
+        go(
+            options,
+            options => userModel.update(options).catch(e => { throw e }),
+            rdbResult => rdbResult[0] > 0 ? undefined : throwError({ message: 'Update Record In RDB Fail!' }),
+            _ => updateValue(req.headers['tiptap-token'], { key: 'shareFlag', value: true }),
+            redisResult => redisResult === 'OK'
+            ? respondJson(res, resultCode.success, { desc: 'Completed Update On Share' })
+            : throwError({ message: 'Update Session Data In Redis Fail!' })
+        );
+    } catch (error) {
+        return respondOnError(res, resultCode.error, error.message);
+    }
+});
+
+router.post('/share/off', async (req, res) => {
+    try {
+        const { key = false } = await go(
+          req.headers['tiptap-token'],
+          getValue
+        );
+
+        if (!key) throw { message: 'Unknown Token Error' };
+
+        const options = {
+            data: {
+                shareFlag: false
+            },
+            where: {
+                id: key
+            }
+        };
+  
+        go(
+            options,
+            options => userModel.update(options).catch(e => { throw e }),
+            rdbResult => rdbResult[0] > 0 ? undefined : throwError({ message: 'Update Record In RDB Fail!' }),
+            _ => updateValue(req.headers['tiptap-token'], { key: 'shareFlag', value: false }),
+            redisResult => redisResult === 'OK'
+            ? respondJson(res, resultCode.success, { desc: 'Completed Update Off Share' })
+            : throwError({ message: 'Update Session Data In Redis Fail!' })
+        );
+    } catch (error) {
+        return respondOnError(res, resultCode.error, error.message);
+    }
 });
 
 router.post('/update', (req, res) => {

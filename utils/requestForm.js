@@ -14,7 +14,9 @@ module.exports = {
         registrationKey: 'registration_key', // 푸시 사용자 토큰
         deviceType: 'android' // android or ios 소문자
       },
-      '/account/readed/diary/reset': {}
+      '/account/readed/diary/reset': {},
+      '/account/share/on': {},
+      '/account/share/off': {}
     },
     diaryRq: {
       '/diary/list/by/date': {},
