@@ -44,7 +44,7 @@ router.post('/write', async (req, res) => {
       };
       let diaryToStampMapperIndex;
 
-      const { key, stamp = [], todayIndex = 0 } = await go(
+      const { key, stamp = [], todayIndex = 0, shareFlag = false } = await go(
         req.headers['tiptap-token'],
         getValue,
         obj => obj
@@ -58,6 +58,7 @@ router.post('/write', async (req, res) => {
 
       data.user_id = key;
       data.todayIndex = todayIndex + 1;
+      data.shared = shareFlag;
 
       fileName
       ? go(
@@ -242,6 +243,7 @@ router.get('/random', async (req, res) => {
             const options = {
                 where: {
                     user_id: user_id,
+                    shared: 1,
                     createdAt: {
                         $between: [
                             `${moment(createdAt).format('YYYY-MM-DD')} 00:00:00`,
@@ -323,7 +325,7 @@ router.get('/today', async (req, res) => {
 
 router.post('/update', async (req, res) => {
     try {
-      const { key } = await go(
+      const { key = false, shareFlag = false } = await go(
         req.headers['tiptap-token'],
         getValue,
         obj => obj
@@ -338,7 +340,8 @@ router.post('/update', async (req, res) => {
               content: content,
               location: location,
               latitude: latitude,
-              longitude: longitude
+              longitude: longitude,
+              shared: shareFlag
           },
           where: {
               id: id,
