@@ -7,21 +7,12 @@ const auth_key = crypto.enc.Base64.parse(config.server.auth_key);
 
 const Common = (function (){
 
-  const stamps = [
-    'stamp1',
-    'stamp2',
-    'stamp3',
-    'stamp4',
-    'stamp5',
-    'stamp6',
-    'stamp7',
-    'stamp8',
-    'stamp9',
-    'stamp10',
-    'stamp11',
-    'stamp12',
-    'stamp13'
-  ];
+  const generatorStamps = (total, cnt = 0, resultArr = []) => 
+    cnt >= total 
+    ? resultArr 
+    : generatorStamps(total, ++cnt, (_ => { resultArr.push(`stamp${cnt}`); return resultArr; })());
+
+  const stamps = generatorStamps(29);
 
   return {
     encrypt: function (content) {
