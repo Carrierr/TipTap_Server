@@ -25,7 +25,11 @@ const RoutesModule = (function (){
               // TODO 런칭 직전에 바꿔야 함 false로
           );
 
-          if (!status && getUrl(req.originalUrl) !== '/auth/login') {
+          if (!status && ![
+              '/auth/send/mail', 
+              '/auth/login', 
+              '/auth/mail', 
+              '/auth/sign/up/mail'].includes(req.originalUrl)) {
               return respondOnError(res, resultCode.accessDenine, { desc: 'Access Denine' });
           };
 

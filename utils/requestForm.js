@@ -4,6 +4,13 @@ module.exports = {
         type: 'kakao',
         account: 'llgs901@naver.com',
         name: '이기섭'
+      },
+      '/auth/send/mail': {
+        mail: 'llgs901@naver.com'
+      },
+      '/auth/mail': {
+        mail: 'llgs901@naver.com',
+        auth: 111111
       }
     },
     accountRq: {

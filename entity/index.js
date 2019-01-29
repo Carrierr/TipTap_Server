@@ -13,6 +13,7 @@ const user = sequelizeInstance.define('user', {
     name: { type: sequelize.STRING(30), allowNull: false }, // 이름
     phone: { type: sequelize.STRING(15), allowNull: true }, // 핸드폰번호
     authType: { type: sequelize.CHAR(10), allowNull: false }, // 서드파티 인증 타입 (ex. kakao, naver, facebook))
+    password: { type: sequelize.STRING(300), allowNull: true },
     thirdPartyAccount: { type: sequelize.STRING(100), allowNull: false }, // 서드파티 (ex. 카카오) 계정
     shareFlag: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 공유 가능 여부
     status: { type: sequelize.BOOLEAN, allowNull: true, defaultValue : 1 }, // 계정 정지 여부
