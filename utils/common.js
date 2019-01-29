@@ -16,12 +16,12 @@ const Common = (function (){
 
   return {
     encrypt: function (content) {
-      return crypto.AES.encrypt(content, auth_key, {iv: iv}).toString();
+      return crypto.AES.encrypt(content, auth_key.toString(), {iv: iv}).toString();
     },
     decrypt: function (content) {
       return go(
         content,
-        content => crypto.AES.decrypt(content.toString(), auth_key, {iv: iv}),
+        content => crypto.AES.decrypt(content + '', auth_key.toString(), {iv: iv}),
         bytes => bytes.toString(crypto.enc.Utf8)
       );
     },
@@ -38,16 +38,17 @@ const Common = (function (){
       ) ? images : false
     },
     parameterFormCheck: curry((param, form) => (Object.keys(form).length === 0) ? true : isMatch(Object.keys(param), Object.keys(form))),
-    getUrl: (originalUrl) => first(originalUrl.split('?')),
-    getRemainStamp: (current) => go(
+    getUrl: originalUrl => first(originalUrl.split('?')),
+    getRemainStamp: current => go(
       stamps,
       reject(a => current.includes(a) ? a : undefined)
     ),
-    getRandomStamp: (arr) => go(
+    getRandomStamp: arr => go(
       arr.length - 1,
       len => Math.floor(Math.random() * (len + 1)),
       index => arr[index]
-    )
+    ),
+    generateCertification: (value = Math.floor(Math.random() * 1000000) + 100000) => value > 1000000 ? value - 100000 : value
   }
 })();
 

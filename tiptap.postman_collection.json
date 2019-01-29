@@ -3,7 +3,7 @@
 		"_postman_id": "4becd867-c929-65f8-e062-16236374c996",
 		"name": "tiptap",
 		"description": "tiptap api",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
@@ -46,21 +46,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/write",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"write"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/write",
 				"description": "header 내\ncontent-type 지정 X (application/json으로 보내면 에러 발생)"
 			},
 			"response": []
@@ -79,21 +65,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"list"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/list",
 				"description": "일기 데이터 조회"
 			},
 			"response": []
@@ -116,21 +88,7 @@
 					"mode": "raw",
 					"raw": "{\n  \"id\": [100, 101, 102]\n}"
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"delete"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete",
 				"description": "다이어리 삭제\nid : diary/list 에서 반환된 id 값"
 			},
 			"response": []
@@ -180,21 +138,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/update",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"update"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/update",
 				"description": "일기 수정\nid : diary/list 에서 반환되는 id\n나머지 파라메터는 write와 동일"
 			},
 			"response": []
@@ -213,27 +157,13 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/today",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"today"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/today",
 				"description": "get today diaries"
 			},
 			"response": []
 		},
 		{
-			"name": "5. login",
+			"name": "5. login (kakao & thirdparty)",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -246,21 +176,7 @@
 					"mode": "raw",
 					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"dororo\"\n}"
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"auth",
-						"login"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
 				"description": "sign up + sign in 통합\n첫 로그인 시 회원 가입\n차후 로그인 시 동일한 정보가 들어오면\n기존 토큰 반환"
 			},
 			"response": []
@@ -365,21 +281,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/random",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"random"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/random",
 				"description": "1일 1회 다른 사람이 특정 일자에 작성한\n일기를 가져오는 api\n1일 1회 호출 수 제한을 두지는 않았으니 클라이언트에서 잘 호출해주시길 바랍니다."
 			},
 			"response": []
@@ -433,23 +335,7 @@
 					}
 				],
 				"body": {},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/readed/diary/reset",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"account",
-						"readed",
-						"diary",
-						"reset"
-					]
-				}
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/readed/diary/reset"
 			},
 			"response": []
 		},
@@ -471,22 +357,7 @@
 					"mode": "raw",
 					"raw": "{\n\t\"date\": \"2018-09-26\"\n}"
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete/day",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"delete",
-						"day"
-					]
-				}
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/delete/day"
 			},
 			"response": []
 		},
@@ -552,21 +423,7 @@
 					"mode": "raw",
 					"raw": "{\n\t\"user_id\": 35\n}"
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/block",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"diary",
-						"block"
-					]
-				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/diary/block",
 				"description": "해당 사용자의 일기를 앞으로도 보기를 원치 않을 때 사용\n"
 			},
 			"response": []
@@ -602,21 +459,7 @@
 						}
 					]
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/blame/report",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"blame",
-						"report"
-					]
-				}
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/blame/report"
 			},
 			"response": []
 		},
@@ -635,22 +478,7 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/share/on",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"account",
-						"share",
-						"on"
-					]
-				}
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/share/on"
 			},
 			"response": []
 		},
@@ -669,22 +497,90 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": {
-					"raw": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/share/off",
-					"host": [
-						"ec2-13-209-117-190",
-						"ap-northeast-2",
-						"compute",
-						"amazonaws",
-						"com"
-					],
-					"port": "8080",
-					"path": [
-						"account",
-						"share",
-						"off"
-					]
-				}
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/account/share/off"
+			},
+			"response": []
+		},
+		{
+			"name": "17. mail authentication",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mail\": \"llgs901@naver.com\",\n\t\"auth\": \"730060\"\n}"
+				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/mail",
+				"description": "메일로 발송된 인증코드 인증 처리 api"
+			},
+			"response": []
+		},
+		{
+			"name": "18. send verification number mail",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"mail\": \"llgs901@naver.com\"\n}"
+				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/send/mail",
+				"description": "인증 메일 발송 api"
+			},
+			"response": []
+		},
+		{
+			"name": "19. sign up by email",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"account\": \"spectacle@lotte.net\",\n  \"name\": \"닉네임\",\n  \"password\": \"test123$\"\n}"
+				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/sign/up/mail",
+				"description": "인증이 완료된 이메일로 회원 가입하기"
+			},
+			"response": []
+		},
+		{
+			"name": "20. login (email)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"type\": \"email\",\n\t\"account\": \"llgs901@naver.com\",\n\t\"password\": \"test123$\"\n}"
+				},
+				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login"
 			},
 			"response": []
 		}

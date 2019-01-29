@@ -14,12 +14,28 @@ const RedisModule = (function () {
       db: 0,
       retryStrategy: function (times) {
           const delay = Math.min(times * 2, 2000);
-          console.log(util.format('[Logger]::[Redis]::[Service]::[%s]::[Retried...]',
+          console.log(util.format('[Logger]::[Redis(tokenDB)]::[Service]::[%s]::[Retried...]',
                                     moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')));
           return delay;
       }
   });
+  const authorization = new ioRedis(
+    {
+        port: config.redis.redisPort,
+        host: config.redis.redisHost,
+        password: config.redis.redisPassword,
+        db: 2,
+        retryStrategy: function (times) {
+            const delay = Math.min(times * 2, 2000);
+            console.log(util.format('[Logger]::[Redis(AuthorizationDB)]::[Service]::[%s]::[Retried...]',
+                                      moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')));
+            return delay;
+        }
+    });
   return {
+    getAuth: async key => await authorization.get(key).then(v => JSON.parse(v)).catch(e => e.message),
+    setAuth: async (key, value) => await authorization.set(key, JSON.stringify(value), 'ex', 3600).catch(e => e.message),
+    delAuth: async key => await authorization.del(key).then(v => JSON.parse(v)).catch(e => e.message),
     getValue: async (key) => await redis.get(key).then(v => JSON.parse(v)).catch(e => e.message),
     setValue: async (key, value) => await redis.set(key, JSON.stringify(value)).catch(e => e.message),
     updateValue: async (key, valueObj = { key: shared, value: 1 }) => {
