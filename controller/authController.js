@@ -31,11 +31,11 @@ router.post('/mail', async (req, res) => {
     if (!!result) auth == result ? result = true : result = false;
     
     switch (result) {
-      case null : return respondJson(res, resultCode.authorizationError, { message: 'Unknown Mail Address' })
-      case false : return respondJson(res, resultCode.authorizationError, { message: 'Invalid Verification Code' })
+      case null : return respondJson(res, resultCode.authorizationError, { message: '알 수 없는 메일 주소입니다!' })
+      case false : return respondJson(res, resultCode.authorizationError, { message: '잘못된 인증번호 입니다! 메일로 발송된 인증번호를 다시 확인해주세요!' })
       case true :  {
         await setAuth(mail, 'authSuccess');
-        return respondJson(res, resultCode.success, { message: 'Authorization Complete' });
+        return respondJson(res, resultCode.success, { message: '인증 완료' });
       }
       default : {
         return respondJson(res, resultCode.authorizationError, { message: 'Unknown Error' });
@@ -56,7 +56,7 @@ router.post('/send/mail', async (req, res) => {
     );
 
     if (duplicate) {
-      return respondJson(res, resultCode.authorizationError, { message: 'Already Email Of Exsisted Of User' });
+      return respondJson(res, resultCode.authorizationError, { message: '이미 가입된 이메일입니다! 다시 한번 확인해주세요!' });
     }
 
     const cert = generateCertification();
@@ -91,16 +91,15 @@ router.post('/sign/up/mail', async (req, res) => {
       result => !result ? false : true
     );
 
-    if (duplicate) return respondJson(res, resultCode.authorizationError, { message: 'Already Email Of Exsisted Of User' });
+    if (duplicate) return respondJson(res, resultCode.authorizationError, { message: '이미 가입된 이메일입니다! 다시 한번 확인해주세요!' });
     
-
     const auth = await go(
       account,
       getAuth,
       result => result === 'authSuccess' ? true : false
     );
 
-    if (!auth) return respondJson(res, resultCode.authorizationError, { message: 'Unauthenticated Email Address' });
+    if (!auth) return respondJson(res, resultCode.authorizationError, { message: '인증이 완료되지 않은 이메일 주소입니다! 인증을 먼저 완료해주세요!' });
 
     await delAuth(account);
     const data = {
@@ -139,7 +138,7 @@ router.post('/login', async (req, res) => {
     );
 
     if (user) return respondJson(res, resultCode.success, { token: user.token, existed: true });
-    if (type == 'email' && !user) return respondJson(res, resultCode.error, { message: 'Login Fail of Authorization' });
+    if (type == 'email' && !user) return respondJson(res, resultCode.error, { message: '로그인에 실패하였습니다! 이메일 또는 비밀번호를 다시 확인해주세요!' });
 
     return go(
       (data.token = uuidv4(), data),
