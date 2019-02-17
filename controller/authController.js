@@ -5,7 +5,7 @@ const moment = require('moment');
 const _ = require('lodash');
 const router = express.Router();
 
-const { respondJson, respondOnError } = require('../utils/respond');
+const { respondJson, respondOnError, respondHtml } = require('../utils/respond');
 const { setFirstAuth, getAuth, setAuth, delAuth } = require('../modules/redisModule');
 const { sendMail } = require('../modules/mailSenderModule');
 const { userModel } = require('../model');
@@ -22,6 +22,14 @@ router.use((req, res, next) => {
                               moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss')
                           ));
   next();
+});
+
+router.get('/terms/of/use', (req, res) => {
+  try {
+    return respondHtml(res, 'term_of_use');
+  } catch (error) {
+    return respondOnError(res, resultCode.error, error.message);
+  }
 });
 
 router.post('/mail', async (req, res) => {
