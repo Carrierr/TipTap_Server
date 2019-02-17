@@ -34,8 +34,10 @@ function processRun() {
     app.use(methodOverride());
     app.use(bodyParser.json({limit: '15mb'}));
     app.use(bodyParser.urlencoded({ extended: true, limit: '15mb' }));
-    app.set('trust proxy', config.server.trust_proxy_host);
     app.use(express.static(path.join(__dirname, 'image')));
+    app.set('trust proxy', config.server.trust_proxy_host);
+    app.set('views', path.join(__dirname, 'pages'));
+    app.set('view engine', 'ejs');
 
     entity.Init();
     routes.Init();

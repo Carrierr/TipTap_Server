@@ -29,7 +29,8 @@ const RoutesModule = (function (){
               '/auth/send/mail', 
               '/auth/login', 
               '/auth/mail', 
-              '/auth/sign/up/mail'].includes(req.originalUrl)) {
+              '/auth/sign/up/mail',
+              '/auth/terms/of/use'].includes(req.originalUrl)) {
               return respondOnError(res, resultCode.accessDenine, { desc: 'Access Denine' });
           };
 
