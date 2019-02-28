@@ -30,6 +30,25 @@ const diaryModel = (function () {
     find: async function(options) {
         return await diary.findAll(options);
     },
+    /**
+     * location 제외하기 위한 임시 함수
+     */
+    findSomeOneDiary: async function (options) {
+      options.attributes = [
+        'id', 
+        'user_id', 
+        'content',
+        'imagePath',
+        'imageUrl',
+        'latitude',
+        'longitude',
+        'star',
+        'shared',
+        'todayIndex',
+        'createdAt',
+        'updatedAt'];
+      return await diary.findAll(options);
+    },
     findToday: async function(options) {
         options.order = [['id', 'ASC']];
         options.where.createdAt = {
