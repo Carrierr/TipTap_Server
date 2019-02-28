@@ -49,6 +49,12 @@ router.post('/mail', async (req, res) => {
 router.post('/send/mail', async (req, res) => {
   try {
     const { mail } = req.body;
+
+    const alreadySend = await go(mail, getAuth);
+    if (alreadySend) {
+      return respondJson(res, resultCode.authorizationError, { message: '이미 인증번호가 발송되었습니다! 메일을 확인해주세요!' });
+    }
+
     const duplicate = await go(
       mail,
       email => userModel.findOne({ where: { thirdPartyAccount: email } }),
