@@ -34,12 +34,7 @@ module.exports = {
       '/diary/block': {
         user_id: 1
       },
-      '/diary/write': {
-        	content: "tiptap diary content",
-        	location: "서울시 금천구 가산동 533-22",
-        	latitude: "36.806702",
-        	longitude: "126.979874"
-      },
+      '/diary/write': {},
       '/diary/update': {
           id: 1,
           content: "tiptap diary content",
