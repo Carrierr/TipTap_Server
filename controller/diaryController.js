@@ -255,7 +255,7 @@ router.get('/random', async (req, res) => {
             };
             return options;
           },
-          diaryModel.find,
+          diaryModel.findSomeOneDiary,
           data => {
               return go(
                   null,
@@ -264,7 +264,10 @@ router.get('/random', async (req, res) => {
                   _ => data,
                   result => go(
                     result,
-                    data => map(item => item.dataValues, data),
+                    /** @TODO
+                     * 클라이언트 업데이트 후 location 초기화 로직 제거
+                     */
+                    data => map(item => (item.dataValues.location = '', item.dataValues), data),
                     arr => arr.reverse()
                   )
               );
