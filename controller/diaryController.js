@@ -35,10 +35,11 @@ router.use((req, res, next) => {
 router.post('/write', async (req, res) => {
     try {
       const fileName = req.files ? req.files.diaryFile.name : false;
-      const { content, location, latitude, longitude } = req.body;
+      const { content, location, latitude, longitude, city = '' } = req.body;
       const data = {
           content: content,
           location: location,
+          city: city || location.split(" ")[0],
           latitude: latitude,
           longitude: longitude
       };

@@ -13,7 +13,7 @@
 				"header": [
 					{
 						"key": "tiptap-token",
-						"value": "5ddfcb4c-aff0-441b-9a88-e7dbecb43170"
+						"value": "def2dfb1-9e1c-4223-a9b7-dd94154e484a"
 					}
 				],
 				"body": {
@@ -21,28 +21,33 @@
 					"formdata": [
 						{
 							"key": "content",
-							"value": "diary content",
+							"value": "내일 쉬는날이다....!!!!",
 							"type": "text"
 						},
 						{
 							"key": "location",
-							"value": "서울시 금천구 가산동 144-229",
+							"value": "서울시 금천구 가산동 533",
 							"type": "text"
 						},
 						{
 							"key": "latitude",
-							"value": "236.8067020990290",
+							"value": "37",
 							"type": "text"
 						},
 						{
 							"key": "longitude",
-							"value": "126.979874",
+							"value": "37",
 							"type": "text"
 						},
 						{
 							"key": "diaryFile",
 							"type": "file",
 							"src": ""
+						},
+						{
+							"key": "city",
+							"value": "Seoul",
+							"type": "text"
 						}
 					]
 				},
@@ -174,7 +179,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"dororo\"\n}"
+					"raw": "{\n  \"type\": \"kakao\",\n  \"account\": \"129837187263622\",\n  \"name\": \"giseoplee\"\n}"
 				},
 				"url": "ec2-13-209-117-190.ap-northeast-2.compute.amazonaws.com:8080/auth/login",
 				"description": "sign up + sign in 통합\n첫 로그인 시 회원 가입\n차후 로그인 시 동일한 정보가 들어오면\n기존 토큰 반환"
