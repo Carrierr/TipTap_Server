@@ -44,6 +44,7 @@ const diaryModel = (function () {
         'longitude',
         'star',
         'shared',
+        'city',
         'todayIndex',
         'createdAt',
         'updatedAt'];
