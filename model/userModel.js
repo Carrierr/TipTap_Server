@@ -13,7 +13,8 @@ const userModel = (function () {
     },
     findOne: async function(options) {
       return await user.findOne(options);
-    }
+    },
+    findAll: async options => await user.findAll(options)
   }
 })();
 
